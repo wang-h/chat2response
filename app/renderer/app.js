@@ -182,7 +182,7 @@ function updateCodexConfig(port) {
     deepseek: 'deepseek-chat',
     kimi: 'kimi-coding',
     glm: 'glm-5',
-    minimax: 'minimax-2.7'
+    minimax: 'codex-MiniMax-M2.7'  // 用户指定的 MiniMax 模型名
   };
   const model = modelMap[provider] || `${provider}-chat`;
   
