@@ -99,13 +99,20 @@ function createWindow() {
 
 // Create tray icon
 function createTray() {
-  // Use the 16x16 PNG icon for tray
+  // Use template icon for macOS (follows system light/dark mode)
   const iconPath = path.join(__dirname, 'assets', 'tray-icon.png');
   
   if (fs.existsSync(iconPath)) {
-    tray = new Tray(iconPath);
+    const image = nativeImage.createFromPath(iconPath);
+    
+    // macOS: use template image for proper system integration
+    if (process.platform === 'darwin') {
+      image.setTemplateImage(true);
+    }
+    
+    tray = new Tray(image);
   } else {
-    // Fallback: create an empty icon (should not happen)
+    // Fallback
     tray = new Tray(nativeImage.createEmpty());
   }
   
@@ -305,9 +312,28 @@ async function stopServer() {
   }
 }
 
+// Update tray icon based on server status
+function updateTrayIcon() {
+  if (!tray || process.platform !== 'darwin') return;
+  
+  // Use different icon based on server status
+  const iconName = isServerRunning() ? 'tray-icon-running.png' : 'tray-icon-stopped.png';
+  const iconPath = path.join(__dirname, 'assets', iconName);
+  
+  if (fs.existsSync(iconPath)) {
+    const image = nativeImage.createFromPath(iconPath);
+    // Don't use template image for colored status icons
+    image.setTemplateImage(false);
+    tray.setImage(image);
+  }
+}
+
 // Update tray menu
 function updateTrayMenu() {
   if (!tray) return;
+  
+  // Update icon for status indication
+  updateTrayIcon();
   
   const contextMenu = Menu.buildFromTemplate([
     {
@@ -321,24 +347,13 @@ function updateTrayMenu() {
       }
     },
     {
-      label: 'Server Status',
-      submenu: [
-        {
-          label: isServerRunning() ? `Running on port ${loadConfig().port}` : 'Stopped',
-          enabled: false
-        },
-        { type: 'separator' },
-        {
-          label: 'Start Server',
-          click: () => startServer(),
-          visible: !isServerRunning()
-        },
-        {
-          label: 'Stop Server',
-          click: () => stopServer(),
-          visible: isServerRunning()
-        }
-      ]
+      label: isServerRunning() ? '✅ Running' : '⭕ Stopped',
+      enabled: false
+    },
+    { type: 'separator' },
+    {
+      label: isServerRunning() ? 'Stop Server' : 'Start Server',
+      click: () => isServerRunning() ? stopServer() : startServer()
     },
     { type: 'separator' },
     {
