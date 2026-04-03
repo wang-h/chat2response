@@ -22,7 +22,37 @@ OpenAI Codex 0.118+ **completely removed** Chat Completions support and now **on
 
 ## Quick Start
 
-### 1. Install
+### Option 1: Desktop App (Recommended)
+
+Cross-platform desktop application with GUI for easy configuration.
+
+#### 1. Download
+
+Download the installer for your system from [Releases](https://github.com/wang-h/chat2response/releases):
+- Windows: `Chat2Response-2.0.0.exe`
+- macOS: `Chat2Response-2.0.0.dmg`
+
+#### 2. Configure API Keys
+
+Open the app and enter at least one API Key:
+- GLM API Key (optional)
+- DeepSeek API Key (recommended)
+- Kimi API Key (optional)
+- MiniMax API Key (optional)
+
+#### 3. Start Server
+
+Click "Start Server" button and wait for the status to show "Running".
+
+#### 4. Configure Codex
+
+Copy the displayed Codex configuration and add it to `~/.codex/config.toml`.
+
+### Option 2: Command Line
+
+For developers or users who prefer CLI.
+
+#### 1. Install
 
 ```bash
 git clone https://github.com/wang-h/chat2response.git

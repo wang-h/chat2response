@@ -29,7 +29,37 @@ Kimi Code 是 [月之暗面](https://www.moonshot.cn/)（Moonshot AI）开发的
 
 ## 快速开始
 
-### 1. 安装依赖
+### 方式一：桌面应用（推荐）
+
+为 Windows 和 Mac 用户提供图形界面，无需命令行操作。
+
+#### 1. 下载安装包
+
+从 [Releases](https://github.com/wang-h/chat2response/releases) 下载对应系统的安装包：
+- Windows: `Chat2Response-2.0.0.exe`
+- macOS: `Chat2Response-2.0.0.dmg`
+
+#### 2. 配置 API Keys
+
+打开应用，在界面中填入至少一个 API Key：
+- GLM API Key（可选）
+- DeepSeek API Key（推荐）
+- Kimi API Key（可选）
+- MiniMax API Key（可选）
+
+#### 3. 启动服务器
+
+点击"启动服务器"按钮，看到状态变为"运行中"即可。
+
+#### 4. 配置 Codex
+
+复制界面显示的 Codex 配置，添加到 `~/.codex/config.toml`。
+
+### 方式二：命令行版本
+
+适合开发者或喜欢命令行的用户。
+
+#### 1. 安装依赖
 
 ```bash
 cd chat2response-v2
