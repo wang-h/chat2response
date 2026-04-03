@@ -320,12 +320,27 @@ export function createResponseCompletedEvent(
   input: ResponsesRequest['input'],
   usage?: { input_tokens: number; output_tokens: number; total_tokens: number }
 ): StreamEvent {
+  const output: OutputItem[] = [];
+  
+  // Add text output item
   const outputItem: OutputItem = {
     id: state.outputItemId,
     type: 'message',
     role: 'assistant',
     content: [{ type: 'output_text', text: state.fullText }],
   };
+  output.push(outputItem);
+  
+  // Add tool call outputs
+  for (const tc of state.completedToolCalls) {
+    output.push({
+      id: tc.id,
+      type: 'function_call',
+      name: tc.name,
+      arguments: tc.arguments,
+      call_id: tc.id,
+    });
+  }
   
   const response: ResponseObject = {
     id: state.responseId,
@@ -334,13 +349,78 @@ export function createResponseCompletedEvent(
     model,
     status: 'completed',
     input: typeof input === 'string' ? [{ type: 'message', role: 'user', content: input }] : input,
-    output: [outputItem],
+    output,
     usage,
   };
   
   return {
     type: 'response.completed',
     response,
+  };
+}
+
+function createFunctionCallArgumentsDeltaEvent(
+  outputIndex: number,
+  itemId: string,
+  delta: string
+): StreamEvent {
+  return {
+    type: 'response.function_call_arguments.delta',
+    output_index: outputIndex,
+    item_id: itemId,
+    delta,
+  };
+}
+
+function createFunctionCallArgumentsDoneEvent(
+  outputIndex: number,
+  itemId: string,
+  arguments_: string
+): StreamEvent {
+  return {
+    type: 'response.function_call_arguments.done',
+    output_index: outputIndex,
+    item_id: itemId,
+    arguments: arguments_,
+  };
+}
+
+function createFunctionCallOutputItemAddedEvent(
+  outputIndex: number,
+  itemId: string,
+  name: string
+): StreamEvent {
+  const item: OutputItem = {
+    id: itemId,
+    type: 'function_call',
+    name,
+    arguments: '',
+    call_id: itemId,
+  };
+  return {
+    type: 'response.output_item.added',
+    output_index: outputIndex,
+    item,
+  };
+}
+
+function createFunctionCallOutputItemDoneEvent(
+  outputIndex: number,
+  itemId: string,
+  name: string,
+  arguments_: string
+): StreamEvent {
+  const item: OutputItem = {
+    id: itemId,
+    type: 'function_call',
+    name,
+    arguments: arguments_,
+    call_id: itemId,
+  };
+  return {
+    type: 'response.output_item.done',
+    output_index: outputIndex,
+    item,
   };
 }
 
@@ -369,6 +449,12 @@ export async function* streamChatToResponses(
   // Helper function to send completion events
   const sendCompletionEvents = function* (): Generator<string> {
     if (!state.isCompleted && state.isOutputItemAdded) {
+      // Finalize any pending tool call
+      if (state.currentToolCall) {
+        state.completedToolCalls.push({ ...state.currentToolCall });
+        state.currentToolCall = undefined;
+      }
+
       // Send output_text.done
       if (state.fullText.length > 0) {
         yield formatSSE(createOutputTextDoneEvent(state));
@@ -379,8 +465,16 @@ export async function* streamChatToResponses(
         yield formatSSE(createContentPartDoneEvent(state));
       }
       
-      // Send output_item.done
+      // Send output_item.done for message
       yield formatSSE(createOutputItemDoneEvent(state));
+      
+      // Send function_call_arguments.done and output_item.done for each tool call
+      for (let i = 0; i < state.completedToolCalls.length; i++) {
+        const tc = state.completedToolCalls[i];
+        const tcOutputIndex = i + 1;
+        yield formatSSE(createFunctionCallArgumentsDoneEvent(tcOutputIndex, tc.id, tc.arguments));
+        yield formatSSE(createFunctionCallOutputItemDoneEvent(tcOutputIndex, tc.id, tc.name, tc.arguments));
+      }
       
       // Send response.completed
       yield formatSSE(createResponseCompletedEvent(state, model, input, usage));
@@ -461,14 +555,33 @@ export async function* streamChatToResponses(
               for (const toolCall of choice.delta.tool_calls) {
                 // Handle tool call initialization
                 if (toolCall.id && toolCall.function?.name) {
+                  // If there was a previous incomplete tool call, save it
+                  if (state.currentToolCall) {
+                    state.completedToolCalls.push({ ...state.currentToolCall });
+                  }
+                  
                   state.currentToolCall = {
                     id: toolCall.id,
                     name: toolCall.function.name,
                     arguments: toolCall.function.arguments || '',
                   };
+                  
+                  // Emit output_item.added for this function call
+                  yield formatSSE(createFunctionCallOutputItemAddedEvent(
+                    state.toolCallOutputIndex++,
+                    state.currentToolCall.id,
+                    state.currentToolCall.name
+                  ));
                 } else if (toolCall.function?.arguments && state.currentToolCall) {
                   // Accumulate arguments
                   state.currentToolCall.arguments += toolCall.function.arguments;
+                  
+                  // Emit arguments delta
+                  yield formatSSE(createFunctionCallArgumentsDeltaEvent(
+                    state.toolCallOutputIndex - 1,
+                    state.currentToolCall.id,
+                    toolCall.function.arguments
+                  ));
                 }
               }
             }
@@ -485,6 +598,12 @@ export async function* streamChatToResponses(
             // Handle finish reason
             if (choice.finish_reason) {
               debug('Finish reason:', choice.finish_reason);
+              
+              // Finalize current tool call if present
+              if (state.currentToolCall && choice.finish_reason === 'tool_calls') {
+                state.completedToolCalls.push({ ...state.currentToolCall });
+                state.currentToolCall = undefined;
+              }
             }
           }
         } catch (e) {
