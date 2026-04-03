@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, Tray, Menu, ipcMain, dialog, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const os = require('os');
@@ -99,14 +99,19 @@ function createWindow() {
 
 // Create tray icon
 function createTray() {
-  // Use a simple colored square as tray icon (can be replaced with actual icon)
-  const trayIconPath = path.join(__dirname, 'assets', 'tray-icon.png');
+  // Use the 16x16 PNG icon for tray
+  const iconPath = path.join(__dirname, 'assets', 'tray-icon.png');
   
-  // Create a simple tray icon if doesn't exist
-  if (!fs.existsSync(trayIconPath)) {
-    tray = new Tray(path.join(__dirname, 'assets', 'icon.png'));
+  if (fs.existsSync(iconPath)) {
+    tray = new Tray(iconPath);
   } else {
-    tray = new Tray(trayIconPath);
+    // Fallback: create an empty icon (should not happen)
+    tray = new Tray(nativeImage.createEmpty());
+  }
+  
+  // Set highlight mode for macOS (icon highlights when clicked)
+  if (process.platform === 'darwin') {
+    tray.setHighlightMode('always');
   }
 
   const contextMenu = Menu.buildFromTemplate([
