@@ -1,0 +1,72 @@
+{
+  "name": "chat2response-app",
+  "version": "2.0.0",
+  "description": "Chat2Response Desktop App - Easy proxy for Codex + Chinese LLMs",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "dist": "npm run build"
+  },
+  "build": {
+    "appId": "com.chat2response.app",
+    "productName": "Chat2Response",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/",
+      "assets/",
+      "server/",
+      "node_modules/"
+    ],
+    "mac": {
+      "category": "public.app-category.developer-tools",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
+      ],
+      "icon": "assets/icon.png"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64", "ia32"]
+        }
+      ],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "keywords": [
+    "codex",
+    "openai",
+    "proxy",
+    "llm",
+    "deepseek",
+    "kimi",
+    "glm",
+    "minimax"
+  ],
+  "author": "Chat2Response Contributors",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "uuid": "^9.0.0"
+  }
+}

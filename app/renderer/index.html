@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat2Response</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <h1>🚀 Chat2Response</h1>
+      <p class="subtitle">让 Codex 使用国内大模型的代理工具</p>
+      <div class="version">v2.0.0</div>
+    </header>
+
+    <!-- Server Status -->
+    <section class="status-section">
+      <div class="status-card" id="statusCard">
+        <div class="status-indicator" id="statusIndicator"></div>
+        <div class="status-text">
+          <span id="statusText">服务器未运行</span>
+          <span class="port-info" id="portInfo"></span>
+        </div>
+        <button id="toggleServerBtn" class="btn btn-primary">启动服务器</button>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- API Keys -->
+      <section class="section">
+        <h2>🔑 API Keys 配置</h2>
+        <p class="hint">请至少配置一个 API Key</p>
+        
+        <div class="provider-list">
+          <div class="provider-item">
+            <div class="provider-header">
+              <span class="provider-name">GLM</span>
+              <span class="provider-model">默认: glm-5</span>
+            </div>
+            <input type="password" id="glmKey" placeholder="输入 GLM API Key" class="api-input">
+            <div class="provider-features">
+              <span class="feature disabled">❌ Tools</span>
+              <span class="feature enabled">✅ Streaming</span>
+            </div>
+          </div>
+
+          <div class="provider-item">
+            <div class="provider-header">
+              <span class="provider-name">Kimi</span>
+              <span class="provider-model">默认: kimi-coding</span>
+            </div>
+            <input type="password" id="kimiKey" placeholder="输入 Kimi API Key" class="api-input">
+            <div class="provider-features">
+              <span class="feature enabled">✅ Tools</span>
+              <span class="feature enabled">✅ Streaming</span>
+            </div>
+          </div>
+
+          <div class="provider-item">
+            <div class="provider-header">
+              <span class="provider-name">DeepSeek</span>
+              <span class="provider-model">默认: deepseek-chat</span>
+            </div>
+            <input type="password" id="deepseekKey" placeholder="输入 DeepSeek API Key" class="api-input">
+            <div class="provider-features">
+              <span class="feature enabled">✅ Tools</span>
+              <span class="feature enabled">✅ Streaming</span>
+            </div>
+            <span class="recommend-badge">推荐</span>
+          </div>
+
+          <div class="provider-item">
+            <div class="provider-header">
+              <span class="provider-name">MiniMax</span>
+              <span class="provider-model">默认: minimax-2.7</span>
+            </div>
+            <input type="password" id="minimaxKey" placeholder="输入 MiniMax API Key" class="api-input">
+            <div class="provider-features">
+              <span class="feature enabled">✅ Tools</span>
+              <span class="feature enabled">✅ Streaming</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section class="section">
+        <h2>⚙️ 设置</h2>
+        
+        <div class="setting-item">
+          <label for="defaultProvider">默认提供商</label>
+          <select id="defaultProvider" class="select-input">
+            <option value="glm">GLM</option>
+            <option value="kimi">Kimi</option>
+            <option value="deepseek" selected>DeepSeek</option>
+            <option value="minimax">MiniMax</option>
+          </select>
+        </div>
+
+        <div class="setting-item">
+          <label for="port">服务器端口</label>
+          <input type="number" id="port" value="3456" min="1024" max="65535" class="number-input">
+        </div>
+
+        <div class="setting-item checkbox">
+          <label>
+            <input type="checkbox" id="autoStart">
+            <span>开机自动启动服务器</span>
+          </label>
+        </div>
+
+        <div class="setting-item checkbox">
+          <label>
+            <input type="checkbox" id="minimizeToTray" checked>
+            <span>关闭窗口时最小化到系统托盘</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Codex Config -->
+      <section class="section" id="codexSection" style="display: none;">
+        <h2>📝 Codex 配置</h2>
+        <p class="hint">服务器运行后，添加以下配置到 ~/.codex/config.toml</p>
+        
+        <div class="code-block">
+          <pre id="codexConfig"></pre>
+          <button class="btn btn-small" onclick="copyConfig()">复制</button>
+        </div>
+      </section>
+
+      <!-- Logs -->
+      <section class="section">
+        <h2>📋 日志</h2>
+        <div class="log-container" id="logContainer">
+          <div class="log-entry info">应用已启动</div>
+        </div>
+        <button class="btn btn-small" onclick="clearLogs()">清空日志</button>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-links">
+        <a href="#" onclick="openConfigDir()">打开配置目录</a>
+        <a href="https://github.com/wang-h/chat2response" target="_blank">GitHub</a>
+      </div>
+      <div class="footer-info">
+        Created with ❤️ and Kimi Code
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
