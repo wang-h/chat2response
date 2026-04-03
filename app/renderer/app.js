@@ -162,17 +162,10 @@ function updateServerUI(running, port) {
   }
 }
 
-// Get the first configured API key provider
+// Get the currently selected provider (from dropdown)
 function getConfiguredProvider() {
-  const providers = [
-    { name: 'deepseek', key: config.apiKeys?.deepseek },
-    { name: 'kimi', key: config.apiKeys?.kimi },
-    { name: 'glm', key: config.apiKeys?.glm },
-    { name: 'minimax', key: config.apiKeys?.minimax }
-  ];
-  
-  const configured = providers.find(p => p.key && p.key.trim().length > 0);
-  return configured ? configured.name : (config.defaultProvider || 'deepseek');
+  // 使用下拉框中选择的提供商，而不是第一个有 Key 的
+  return config.defaultProvider || 'deepseek';
 }
 
 // Update Codex config display
@@ -218,6 +211,11 @@ async function saveConfig() {
     await window.electronAPI.saveConfig(newConfig);
     config = newConfig;
     log('配置已保存', 'info');
+    
+    // 更新 Codex 配置显示
+    if (isRunning) {
+      updateCodexConfig(config.port);
+    }
   } catch (error) {
     log('保存配置失败: ' + error.message, 'error');
   }
