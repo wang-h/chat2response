@@ -220,8 +220,25 @@ async function startServer() {
       if (response.ok) {
         const data = await response.json();
         if (data.service === 'chat2response') {
-          // It's already a Chat2Response server
-          return { success: true, message: `Chat2Response is already running on port ${config.port}` };
+          // It's already a Chat2Response server - connect to it
+          serverProcess = {
+            stop: async () => {
+              // Just clear the reference, actual server might be another instance
+              serverProcess = null;
+              updateTrayMenu();
+              updateApplicationMenu();
+            }
+          };
+          
+          // Update UI
+          if (mainWindow) {
+            mainWindow.webContents.send('server-status', { running: true, port: config.port });
+          }
+          
+          updateTrayMenu();
+          updateApplicationMenu();
+          
+          return { success: true, message: `Connected to existing Chat2Response on port ${config.port}` };
         }
       }
     } catch (e) {
