@@ -1,4 +1,4 @@
-# Chat2Response v2.0
+# Chat2Response
 
 **OpenAI Responses API → Chat Completions Bridge**
 
