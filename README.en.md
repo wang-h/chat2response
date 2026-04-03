@@ -14,6 +14,7 @@ OpenAI Codex 0.118+ **completely removed** Chat Completions support and now **on
 
 - ✅ **Full Streaming Event Sequence** - Strictly follows OpenAI Responses API specification
   - `response.created` → `response.in_progress` → `response.output_item.added` → `response.content_part.added` → `response.output_text.delta` → `response.output_text.done` → `response.content_part.done` → `response.output_item.done` → `response.completed` → `[DONE]`
+- ✅ **Desktop App** - Native Windows and macOS app with menu bar and system tray
 - ✅ **Tool Call Transformation** - Automatically converts `web_search`, `code_interpreter`, `file_search` to standard function calls
 - ✅ **Multi-Provider Support** - GLM, Kimi, DeepSeek, MiniMax
 - ✅ **Streaming & Non-streaming** - Supports both modes
@@ -43,6 +44,15 @@ Open the app and enter at least one API Key:
 #### 3. Start Server
 
 Click "Start Server" button and wait for the status to show "Running".
+
+**Keyboard Shortcuts:**
+- `Cmd/Ctrl + S` - Start/Stop server
+- `Cmd/Ctrl + ,` - Open preferences
+- `Cmd/Ctrl + Q` - Quit application
+
+**Menu Bar Features:**
+- **Server Menu**: Start/stop server, open config directory
+- **Help Menu**: GitHub repository, report issues, documentation
 
 #### 4. Configure Codex
 

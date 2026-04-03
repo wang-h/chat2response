@@ -22,6 +22,7 @@ Kimi Code 是 [月之暗面](https://www.moonshot.cn/)（Moonshot AI）开发的
 
 - ✅ **完整的 Streaming 事件序列** - 严格遵循 OpenAI Responses API 规范
   - `response.created` → `response.output_item.added` → `response.content_part.added` → `response.output_text.delta` → `response.output_text.done` → `response.content_part.done` → `response.output_item.done` → `response.completed` → `[DONE]`
+- ✅ **桌面应用** - Windows 和 macOS 原生应用，支持菜单栏和系统托盘
 - ✅ **Tool Call 转换** - 自动将 `web_search` 等内置工具转换为标准函数调用
 - ✅ **多提供商支持** - GLM、Kimi、DeepSeek、MiniMax
 - ✅ **Streaming & Non-streaming** - 支持流式和非流式响应
@@ -50,6 +51,15 @@ Kimi Code 是 [月之暗面](https://www.moonshot.cn/)（Moonshot AI）开发的
 #### 3. 启动服务器
 
 点击"启动服务器"按钮，看到状态变为"运行中"即可。
+
+**快捷键：**
+- `Cmd/Ctrl + S` - 启动/停止服务器
+- `Cmd/Ctrl + ,` - 打开偏好设置
+- `Cmd/Ctrl + Q` - 退出应用
+
+**菜单栏功能：**
+- **Server 菜单**：启动/停止服务器、打开配置目录
+- **Help 菜单**：GitHub 仓库、问题反馈、使用文档
 
 #### 4. 配置 Codex
 
