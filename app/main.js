@@ -206,6 +206,7 @@ async function startServer() {
     }
     
     updateTrayMenu();
+    updateApplicationMenu();
     
     return { success: true, message: `Server started on port ${config.port}` };
   } catch (error) {
@@ -230,6 +231,7 @@ async function stopServer() {
     }
     
     updateTrayMenu();
+    updateApplicationMenu();
     
     return { success: true, message: 'Server stopped' };
   } catch (error) {
@@ -312,10 +314,180 @@ ipcMain.handle('open-config-dir', () => {
   require('electron').shell.openPath(configDir);
 });
 
+// Create application menu (for macOS menu bar and Windows menu)
+function createApplicationMenu() {
+  const template = [
+    {
+      label: 'Chat2Response',
+      submenu: [
+        {
+          label: 'About Chat2Response',
+          click: () => {
+            dialog.showMessageBox(mainWindow, {
+              type: 'info',
+              title: 'About',
+              message: 'Chat2Response',
+              detail: 'A proxy server that enables OpenAI Codex to work with Chinese LLM providers.\n\nCreated with Kimi Code.'
+            });
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Preferences',
+          accelerator: 'CmdOrCtrl+,',
+          click: () => {
+            if (mainWindow) mainWindow.show();
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Hide Chat2Response',
+          accelerator: 'CmdOrCtrl+H',
+          role: 'hide'
+        },
+        {
+          label: 'Hide Others',
+          accelerator: 'CmdOrCtrl+Shift+H',
+          role: 'hideOthers'
+        },
+        {
+          label: 'Show All',
+          role: 'unhide'
+        },
+        { type: 'separator' },
+        {
+          label: 'Quit',
+          accelerator: process.platform === 'darwin' ? 'Cmd+Q' : 'Ctrl+Q',
+          click: () => {
+            isQuitting = true;
+            stopServer();
+            app.quit();
+          }
+        }
+      ]
+    },
+    {
+      label: 'Server',
+      submenu: [
+        {
+          label: 'Start Server',
+          accelerator: 'CmdOrCtrl+S',
+          click: () => startServer(),
+          visible: !isServerRunning()
+        },
+        {
+          label: 'Stop Server',
+          accelerator: 'CmdOrCtrl+S',
+          click: () => stopServer(),
+          visible: isServerRunning()
+        },
+        { type: 'separator' },
+        {
+          label: 'Open Config Directory',
+          click: () => {
+            require('electron').shell.openPath(configDir);
+          }
+        }
+      ]
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        { role: 'pasteAndMatchStyle' },
+        { role: 'delete' },
+        { role: 'selectAll' }
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' },
+        { role: 'forceReload' },
+        { role: 'toggleDevTools' },
+        { type: 'separator' },
+        { role: 'actualSize' },
+        { role: 'zoomIn' },
+        { role: 'zoomOut' },
+        { type: 'separator' },
+        { role: 'togglefullscreen' }
+      ]
+    },
+    {
+      label: 'Window',
+      submenu: [
+        { role: 'minimize' },
+        { role: 'close' },
+        { type: 'separator' },
+        { role: 'front' }
+      ]
+    },
+    {
+      label: 'Help',
+      submenu: [
+        {
+          label: 'GitHub Repository',
+          click: async () => {
+            await require('electron').shell.openExternal('https://github.com/wang-h/chat2response');
+          }
+        },
+        {
+          label: 'Report Issue',
+          click: async () => {
+            await require('electron').shell.openExternal('https://github.com/wang-h/chat2response/issues');
+          }
+        },
+        { type: 'separator' },
+        {
+          label: 'Documentation',
+          click: async () => {
+            await require('electron').shell.openExternal('https://github.com/wang-h/chat2response/blob/main/README.md');
+          }
+        }
+      ]
+    }
+  ];
+
+  // macOS specific adjustments
+  if (process.platform === 'darwin') {
+    // First menu is already set up for macOS app menu
+  } else {
+    // Windows/Linux: Add File menu
+    template.unshift({
+      label: 'File',
+      submenu: [
+        {
+          label: 'Exit',
+          accelerator: 'Ctrl+Q',
+          click: () => {
+            isQuitting = true;
+            stopServer();
+            app.quit();
+          }
+        }
+      ]
+    });
+  }
+
+  const menu = Menu.buildFromTemplate(template);
+  Menu.setApplicationMenu(menu);
+}
+
+// Update menu when server status changes
+function updateApplicationMenu() {
+  createApplicationMenu();
+}
+
 // App events
 app.whenReady().then(() => {
   createWindow();
   createTray();
+  createApplicationMenu();
   
   // Auto-start server if configured
   const config = loadConfig();
