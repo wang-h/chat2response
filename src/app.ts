@@ -48,12 +48,15 @@ app.get('/v1/models', async (req, res) => {
     const allModels = [];
     
     for (const [key, provider] of Object.entries(PROVIDERS)) {
-      allModels.push({
-        id: provider.defaultModel,
-        object: 'model',
-        created: Date.now(),
-        owned_by: provider.name,
-      });
+      const models = provider.models ?? [provider.defaultModel];
+      for (const modelId of models) {
+        allModels.push({
+          id: modelId,
+          object: 'model',
+          created: Date.now(),
+          owned_by: provider.name,
+        });
+      }
     }
     
     res.json({

@@ -186,6 +186,12 @@ interface StreamState {
     name: string;
     arguments: string;
   };
+  completedToolCalls: Array<{
+    id: string;
+    name: string;
+    arguments: string;
+  }>;
+  toolCallOutputIndex: number;
 }
 
 export function createStreamState(model: string): StreamState {
@@ -199,6 +205,8 @@ export function createStreamState(model: string): StreamState {
     isOutputItemAdded: false,
     isContentPartAdded: false,
     isCompleted: false,
+    completedToolCalls: [],
+    toolCallOutputIndex: 1,
   };
 }
 
