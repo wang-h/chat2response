@@ -4,7 +4,7 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
   glm: {
     name: 'GLM',
     baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
-    defaultModel: 'glm-5',
+    defaultModel: 'glm-5.1',
     supportsTools: false, // GLM does not support function calling well
     supportsStreaming: true,
     transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {
@@ -16,7 +16,7 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
       const transformed: ChatCompletionRequest = {
         ...req,
         // GLM uses a different model naming convention
-        model: req.model?.startsWith('glm-') ? req.model : 'glm-5',
+        model: req.model?.startsWith('glm-') ? req.model : 'glm-5.1',
       };
       
       // Remove tool-related fields

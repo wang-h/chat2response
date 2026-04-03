@@ -525,8 +525,14 @@ export function convertChatToResponses(
   };
   
   const message = chat.choices[0]?.message;
-  const content = message?.content || '';
+  let content = message?.content || '';
   const toolCalls = message?.tool_calls;
+  
+  // Support reasoning_content for reasoning models (e.g., GLM-5)
+  const reasoningContent = (message as unknown as Record<string, string> | undefined)?.reasoning_content;
+  if (!content && reasoningContent) {
+    content = reasoningContent;
+  }
   
   const output: OutputItem[] = [];
   
