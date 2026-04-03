@@ -4,6 +4,20 @@
 
 让 Codex 0.118+ 能够使用国内大模型（智谱 GLM、Kimi、DeepSeek、MiniMax）的代理服务器。
 
+🌐 [English Documentation](./README.en.md) | 中文文档
+
+## 致谢
+
+本项目由 **[Kimi Code](https://kimi.moonshot.cn/)** (kimi-coding) 辅助创建。
+
+Kimi Code 是 [月之暗面](https://www.moonshot.cn/)（Moonshot AI）开发的 AI 编程助手，为项目提供了：
+- 架构设计
+- 核心代码实现
+- 文档编写
+- 测试调试
+
+感谢 Kimi Code 对本项目的贡献！
+
 ## 特性
 
 - ✅ **完整的 Streaming 事件序列** - 严格遵循 OpenAI Responses API 规范
@@ -161,6 +175,12 @@ chat2response-v2/
 - [devproxy](https://github.com/daydaychen/devproxy) (Go) - 灵感来源，MITM 代理方案
 - [aiproxy](https://github.com/labring/aiproxy) (Go) - 多协议 AI 网关
 
+## 贡献者
+
+请查看 [CONTRIBUTORS.md](./CONTRIBUTORS.md) 了解项目贡献者列表。
+
 ## License
 
-MIT
+MIT License - 详见 [LICENSE](./LICENSE)
+
+Copyright (c) 2026 Chat2Response Contributors
