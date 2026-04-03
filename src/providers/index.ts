@@ -4,7 +4,7 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
   glm: {
     name: 'GLM',
     baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
-    defaultModel: 'glm-4-plus',
+    defaultModel: 'glm-5.1',
     supportsTools: false, // GLM does not support function calling well
     supportsStreaming: true,
     transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {
@@ -40,7 +40,7 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
   kimi: {
     name: 'Kimi',
     baseUrl: 'https://api.moonshot.cn/v1', // Kimi standard API endpoint
-    defaultModel: 'kimi-k2-0711-preview', // Kimi for Coding model
+    defaultModel: 'kimi-coding', // Kimi for Coding model
     supportsTools: true, // Kimi supports function calling
     supportsStreaming: true,
     transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {
@@ -64,8 +64,8 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
       }
       
       // Convert model name to Kimi format if needed
-      if (!transformed.model?.startsWith('kimi-')) {
-        transformed.model = 'kimi-k2-0711-preview';
+      if (!transformed.model?.includes('kimi')) {
+        transformed.model = 'kimi-coding';
       }
       
       return transformed;
@@ -98,15 +98,15 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
   minimax: {
     name: 'MiniMax',
     baseUrl: 'https://api.minimax.chat/v1', // 国内版 API
-    defaultModel: 'abab6.5s-chat',
+    defaultModel: 'minimax-2.7',
     supportsTools: true,
     supportsStreaming: true,
     transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {
       const transformed: ChatCompletionRequest = { ...req };
       
       // MiniMax uses different model naming
-      if (!transformed.model?.startsWith('abab')) {
-        transformed.model = 'abab6.5s-chat';
+      if (!transformed.model?.includes('minimax')) {
+        transformed.model = 'minimax-2.7';
       }
       
       // MiniMax requires specific message format

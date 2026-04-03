@@ -97,10 +97,10 @@ env_key = "GLM_API_KEY"
 
 | 提供商 | 模型示例 | 工具调用 | Streaming | 备注 |
 |--------|----------|----------|-----------|------|
-| GLM | glm-4.6 | ❌ | ✅ | 自动移除 tools |
-| Kimi | kimi-k2-0711-preview | ✅ | ✅ | - |
+| GLM | glm-5.1 | ❌ | ✅ | 自动移除 tools |
+| Kimi | kimi-coding | ✅ | ✅ | Kimi for Coding 专用 |
 | DeepSeek | deepseek-chat | ✅ | ✅ | **推荐** |
-| MiniMax | abab6.5s-chat | ✅ | ✅ | - |
+| MiniMax | minimax-2.7 | ✅ | ✅ | - |
 
 ## Streaming 事件序列
 
