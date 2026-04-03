@@ -5,9 +5,10 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder",
-    "build:mac": "electron-builder --mac",
-    "build:win": "electron-builder --win",
+    "build": "npm run build:server && electron-builder",
+    "build:server": "tsc",
+    "build:mac": "npm run build:server && electron-builder --mac",
+    "build:win": "npm run build:server && electron-builder --win",
     "dist": "npm run build"
   },
   "build": {
@@ -21,7 +22,7 @@
       "preload.js",
       "renderer/",
       "assets/",
-      "server/",
+      "server-dist/",
       "node_modules/"
     ],
     "mac": {
@@ -62,7 +63,8 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^30.0.0",
-    "electron-builder": "^24.13.0"
+    "electron-builder": "^24.13.0",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "cors": "^2.8.5",

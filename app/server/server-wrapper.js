@@ -2,9 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
 
-// Import our converter modules
-const { convertResponsesToChat, streamChatToResponses, convertChatToResponses } = require('./converter');
-const { getCurrentProvider, getProvider, getApiKey, transformRequest, isProviderSupported, PROVIDERS } = require('./providers');
+// Import our converter modules (use compiled JS from server-dist)
+const { convertResponsesToChat, streamChatToResponses, convertChatToResponses } = require('../server-dist/converter');
+const { getCurrentProvider, getProvider, getApiKey, transformRequest, isProviderSupported, PROVIDERS } = require('../server-dist/providers');
 
 let server = null;
 let app = null;
