@@ -39,7 +39,10 @@
               <span class="provider-name">GLM</span>
               <span class="provider-model">默认: glm-5</span>
             </div>
-            <input type="password" id="glmKey" placeholder="输入 GLM API Key" class="api-input">
+            <div class="password-input-wrapper">
+              <input type="password" id="glmKey" placeholder="输入 GLM API Key" class="api-input">
+              <button type="button" class="toggle-password" onclick="togglePassword('glmKey')">👁️</button>
+            </div>
             <div class="provider-features">
               <span class="feature disabled">❌ Tools</span>
               <span class="feature enabled">✅ Streaming</span>
@@ -51,7 +54,10 @@
               <span class="provider-name">Kimi</span>
               <span class="provider-model">默认: kimi-coding</span>
             </div>
-            <input type="password" id="kimiKey" placeholder="输入 Kimi API Key" class="api-input">
+            <div class="password-input-wrapper">
+              <input type="password" id="kimiKey" placeholder="输入 Kimi API Key" class="api-input">
+              <button type="button" class="toggle-password" onclick="togglePassword('kimiKey')">👁️</button>
+            </div>
             <div class="provider-features">
               <span class="feature enabled">✅ Tools</span>
               <span class="feature enabled">✅ Streaming</span>
@@ -63,7 +69,10 @@
               <span class="provider-name">DeepSeek</span>
               <span class="provider-model">默认: deepseek-chat</span>
             </div>
-            <input type="password" id="deepseekKey" placeholder="输入 DeepSeek API Key" class="api-input">
+            <div class="password-input-wrapper">
+              <input type="password" id="deepseekKey" placeholder="输入 DeepSeek API Key" class="api-input">
+              <button type="button" class="toggle-password" onclick="togglePassword('deepseekKey')">👁️</button>
+            </div>
             <div class="provider-features">
               <span class="feature enabled">✅ Tools</span>
               <span class="feature enabled">✅ Streaming</span>
@@ -76,7 +85,10 @@
               <span class="provider-name">MiniMax</span>
               <span class="provider-model">默认: minimax-2.7</span>
             </div>
-            <input type="password" id="minimaxKey" placeholder="输入 MiniMax API Key" class="api-input">
+            <div class="password-input-wrapper">
+              <input type="password" id="minimaxKey" placeholder="输入 MiniMax API Key" class="api-input">
+              <button type="button" class="toggle-password" onclick="togglePassword('minimaxKey')">👁️</button>
+            </div>
             <div class="provider-features">
               <span class="feature enabled">✅ Tools</span>
               <span class="feature enabled">✅ Streaming</span>
@@ -122,12 +134,23 @@
       <!-- Codex Config -->
       <section class="section" id="codexSection" style="display: none;">
         <h2>📝 Codex 配置</h2>
-        <p class="hint">服务器运行后，添加以下配置到 ~/.codex/config.toml</p>
+        <div id="codexStatus" class="codex-status"></div>
+        <p class="hint">根据您的 API Key 配置自动生成</p>
         
         <div class="code-block">
           <pre id="codexConfig"></pre>
-          <button class="btn btn-small" onclick="copyConfig()">复制</button>
+          <button class="btn btn-small" onclick="copyConfig()">复制配置</button>
         </div>
+        
+        <div class="codex-actions">
+          <button class="btn btn-secondary" onclick="checkCodexConfig()">
+            🔍 检测 Codex 配置
+          </button>
+          <button class="btn btn-primary" onclick="applyCodexConfig()">
+            ⚡ 一键写入配置
+          </button>
+        </div>
+        <p class="hint warning" id="codexWarning" style="display: none;"></p>
       </section>
 
       <!-- Logs -->

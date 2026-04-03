@@ -379,6 +379,74 @@ ipcMain.handle('open-config-dir', () => {
   require('electron').shell.openPath(configDir);
 });
 
+// Check Codex config
+ipcMain.handle('check-codex-config', async () => {
+  const os = require('os');
+  const path = require('path');
+  const fs = require('fs');
+  
+  const codexConfigPath = path.join(os.homedir(), '.codex', 'config.toml');
+  
+  try {
+    if (!fs.existsSync(codexConfigPath)) {
+      return { exists: false, hasChat2Response: false };
+    }
+    
+    const content = fs.readFileSync(codexConfigPath, 'utf8');
+    const hasChat2Response = content.includes('Chat2Response') || 
+                             content.includes('chat2response') ||
+                             content.includes('localhost:3456');
+    
+    return { exists: true, hasChat2Response, path: codexConfigPath };
+  } catch (error) {
+    return { exists: false, hasChat2Response: false, error: error.message };
+  }
+});
+
+// Apply Codex config
+ipcMain.handle('apply-codex-config', async (event, configText) => {
+  const os = require('os');
+  const path = require('path');
+  const fs = require('fs');
+  
+  const codexDir = path.join(os.homedir(), '.codex');
+  const codexConfigPath = path.join(codexDir, 'config.toml');
+  
+  try {
+    // Ensure .codex directory exists
+    if (!fs.existsSync(codexDir)) {
+      fs.mkdirSync(codexDir, { recursive: true });
+    }
+    
+    // Read existing config if any
+    let existingConfig = '';
+    if (fs.existsSync(codexConfigPath)) {
+      existingConfig = fs.readFileSync(codexConfigPath, 'utf8');
+      
+      // Check if Chat2Response config already exists
+      if (existingConfig.includes('Chat2Response') || existingConfig.includes('chat2response')) {
+        // Replace existing Chat2Response config
+        const chat2ResponseRegex = /\[model_providers\.local\][\s\S]*?(?=\[|$)/;
+        if (chat2ResponseRegex.test(existingConfig)) {
+          existingConfig = existingConfig.replace(chat2ResponseRegex, configText.replace('# 添加到 ~/.codex/config.toml\n\n', '') + '\n\n');
+        } else {
+          existingConfig += '\n\n' + configText;
+        }
+      } else {
+        // Append new config
+        existingConfig += '\n\n' + configText;
+      }
+    } else {
+      existingConfig = configText;
+    }
+    
+    fs.writeFileSync(codexConfigPath, existingConfig);
+    return { success: true, path: codexConfigPath };
+  } catch (error) {
+    return { success: false, message: error.message };
+  }
+});
+
 // Create application menu (for macOS menu bar and Windows menu)
 function createApplicationMenu() {
   const template = [

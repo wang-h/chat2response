@@ -162,17 +162,39 @@ function updateServerUI(running, port) {
   }
 }
 
+// Get the first configured API key provider
+function getConfiguredProvider() {
+  const providers = [
+    { name: 'deepseek', key: config.apiKeys?.deepseek },
+    { name: 'kimi', key: config.apiKeys?.kimi },
+    { name: 'glm', key: config.apiKeys?.glm },
+    { name: 'minimax', key: config.apiKeys?.minimax }
+  ];
+  
+  const configured = providers.find(p => p.key && p.key.trim().length > 0);
+  return configured ? configured.name : (config.defaultProvider || 'deepseek');
+}
+
 // Update Codex config display
 function updateCodexConfig(port) {
+  const provider = getConfiguredProvider();
+  const modelMap = {
+    deepseek: 'deepseek-chat',
+    kimi: 'kimi-coding',
+    glm: 'glm-5',
+    minimax: 'minimax-2.7'
+  };
+  const model = modelMap[provider] || `${provider}-chat`;
+  
   const configText = `# 添加到 ~/.codex/config.toml
 
-model = "${config.defaultProvider || 'deepseek'}-chat"
+model = "${model}"
 model_provider = "local"
 
 [model_providers.local]
 name = "Chat2Response"
 base_url = "http://localhost:${port}/v1"
-env_key = "${(config.defaultProvider || 'deepseek').toUpperCase()}_API_KEY"
+env_key = "${provider.toUpperCase()}_API_KEY"
 `;
   elements.codexConfig.textContent = configText;
 }
@@ -216,6 +238,20 @@ function clearLogs() {
   elements.logContainer.innerHTML = '<div class="log-entry info">日志已清空</div>';
 }
 
+// Toggle password visibility
+function togglePassword(inputId) {
+  const input = document.getElementById(inputId);
+  const button = input.parentElement.querySelector('.toggle-password');
+  
+  if (input.type === 'password') {
+    input.type = 'text';
+    button.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    button.textContent = '👁️';
+  }
+}
+
 // Copy config
 function copyConfig() {
   const configText = elements.codexConfig.textContent;
@@ -225,6 +261,65 @@ function copyConfig() {
   }).catch(() => {
     log('复制失败', 'error');
   });
+}
+
+// Check Codex config
+async function checkCodexConfig() {
+  try {
+    log('检测 Codex 配置...', 'info');
+    const result = await window.electronAPI.checkCodexConfig();
+    
+    const statusEl = document.getElementById('codexStatus');
+    const warningEl = document.getElementById('codexWarning');
+    
+    if (result.exists) {
+      if (result.hasChat2Response) {
+        statusEl.className = 'codex-status success';
+        statusEl.textContent = '✅ Codex 已配置 Chat2Response';
+        warningEl.style.display = 'none';
+        log('Codex 配置检测完成: 已正确配置', 'success');
+      } else {
+        statusEl.className = 'codex-status warning';
+        statusEl.textContent = '⚠️ Codex 配置存在，但未配置 Chat2Response';
+        warningEl.style.display = 'block';
+        warningEl.textContent = '建议点击"一键写入配置"添加 Chat2Response 配置';
+        log('Codex 配置检测完成: 未配置 Chat2Response', 'warn');
+      }
+    } else {
+      statusEl.className = 'codex-status error';
+      statusEl.textContent = '❌ 未找到 Codex 配置文件';
+      warningEl.style.display = 'block';
+      warningEl.textContent = '请先安装 Codex CLI: npm install -g @openai/codex';
+      log('Codex 配置检测完成: 未找到配置文件', 'error');
+    }
+  } catch (error) {
+    log('检测失败: ' + error.message, 'error');
+  }
+}
+
+// Apply Codex config
+async function applyCodexConfig() {
+  try {
+    log('正在写入 Codex 配置...', 'info');
+    const configText = elements.codexConfig.textContent;
+    const result = await window.electronAPI.applyCodexConfig(configText);
+    
+    if (result.success) {
+      const statusEl = document.getElementById('codexStatus');
+      const warningEl = document.getElementById('codexWarning');
+      statusEl.className = 'codex-status success';
+      statusEl.textContent = '✅ 配置已写入 ' + result.path;
+      warningEl.style.display = 'none';
+      log('Codex 配置写入成功: ' + result.path, 'success');
+      alert('配置已写入成功！\n路径: ' + result.path);
+    } else {
+      log('写入失败: ' + result.message, 'error');
+      alert('写入失败: ' + result.message);
+    }
+  } catch (error) {
+    log('写入失败: ' + error.message, 'error');
+    alert('写入失败: ' + error.message);
+  }
 }
 
 // Open config directory

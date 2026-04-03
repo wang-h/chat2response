@@ -11,6 +11,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   stopServer: () => ipcRenderer.invoke('stop-server'),
   getServerStatus: () => ipcRenderer.invoke('get-server-status'),
   
+  // Codex Config
+  checkCodexConfig: () => ipcRenderer.invoke('check-codex-config'),
+  applyCodexConfig: (configText) => ipcRenderer.invoke('apply-codex-config', configText),
+  
   // Utils
   openConfigDir: () => ipcRenderer.invoke('open-config-dir'),
   
