@@ -30,8 +30,35 @@ Cross-platform desktop application with GUI for easy configuration.
 #### 1. Download
 
 Download the installer for your system from [Releases](https://github.com/wang-h/chat2response/releases):
-- Windows: `Chat2Response-2.0.0.exe`
-- macOS: `Chat2Response-2.0.0.dmg`
+
+| System | Package | Description |
+|--------|---------|-------------|
+| macOS Apple Silicon | `Chat2Response-2.0.0-arm64.dmg` | M1/M2/M3 Mac |
+| macOS Intel | `Chat2Response-2.0.0-x64.dmg` | Intel Mac |
+| Windows | `Chat2Response-2.0.0.exe` | 64-bit Windows |
+
+#### 2. Install
+
+**macOS Installation:**
+
+1. Download the `.dmg` file
+2. Double-click to open, drag **Chat2Response** to the **Applications** folder
+   ```
+   ┌─────────────────────────┐
+   │  Chat2Response.app    ➡️ │
+   │     ↓ Drag to           │
+   │  Applications folder    │
+   └─────────────────────────┘
+   ```
+3. Open from **Launchpad** or **Applications** folder
+4. If you see "Cannot open" warning, go to **System Settings > Privacy & Security** and click "Open Anyway"
+
+**Windows Installation:**
+
+1. Download the `.exe` installer
+2. Double-click to run the setup wizard
+3. Choose installation location (default is fine)
+4. Complete installation and launch Chat2Response from Start Menu
 
 #### 2. Configure API Keys
 

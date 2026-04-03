@@ -37,8 +37,35 @@ Kimi Code 是 [月之暗面](https://www.moonshot.cn/)（Moonshot AI）开发的
 #### 1. 下载安装包
 
 从 [Releases](https://github.com/wang-h/chat2response/releases) 下载对应系统的安装包：
-- Windows: `Chat2Response-2.0.0.exe`
-- macOS: `Chat2Response-2.0.0.dmg`
+
+| 系统 | 安装包 | 说明 |
+|------|--------|------|
+| macOS Apple Silicon | `Chat2Response-2.0.0-arm64.dmg` | M1/M2/M3 Mac |
+| macOS Intel | `Chat2Response-2.0.0-x64.dmg` | Intel Mac |
+| Windows | `Chat2Response-2.0.0.exe` | 64位 Windows |
+
+#### 2. 安装应用
+
+**macOS 安装步骤：**
+
+1. 下载 `.dmg` 文件
+2. 双击打开，将 **Chat2Response** 拖拽到 **Applications** 文件夹
+   ```
+   ┌─────────────────────────┐
+   │  Chat2Response.app    ➡️ │
+   │     ↓ 拖拽到              │
+   │  Applications 文件夹     │
+   └─────────────────────────┘
+   ```
+3. 打开 **启动台** 或 **Applications** 文件夹，点击 Chat2Response
+4. 如果提示"无法打开"，前往 **系统设置 > 隐私与安全性** > 点击"仍要打开"
+
+**Windows 安装步骤：**
+
+1. 下载 `.exe` 安装程序
+2. 双击运行安装向导
+3. 选择安装位置（默认即可）
+4. 完成安装，从开始菜单启动 Chat2Response
 
 #### 2. 配置 API Keys
 
