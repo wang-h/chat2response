@@ -97,7 +97,7 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
   
   minimax: {
     name: 'MiniMax',
-    baseUrl: 'https://api.minimaxi.chat/v1',
+    baseUrl: 'https://api.minimax.chat/v1', // 国内版 API
     defaultModel: 'abab6.5s-chat',
     supportsTools: true,
     supportsStreaming: true,
