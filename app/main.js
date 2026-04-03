@@ -177,6 +177,26 @@ function isServerRunning() {
   return serverProcess !== null;
 }
 
+// Check if port is in use
+async function isPortInUse(port) {
+  const net = require('net');
+  return new Promise((resolve) => {
+    const server = net.createServer();
+    server.once('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    });
+    server.once('listening', () => {
+      server.close();
+      resolve(false);
+    });
+    server.listen(port);
+  });
+}
+
 // Start server
 async function startServer() {
   if (serverProcess) {
@@ -189,6 +209,29 @@ async function startServer() {
   const hasApiKey = Object.values(config.apiKeys).some(key => key && key.trim().length > 0);
   if (!hasApiKey) {
     return { success: false, message: 'Please configure at least one API key' };
+  }
+
+  // Check if port is in use
+  const portInUse = await isPortInUse(config.port);
+  if (portInUse) {
+    // Try to connect to the existing server to see if it's Chat2Response
+    try {
+      const response = await fetch(`http://localhost:${config.port}/health`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.service === 'chat2response') {
+          // It's already a Chat2Response server
+          return { success: true, message: `Chat2Response is already running on port ${config.port}` };
+        }
+      }
+    } catch (e) {
+      // Not our server, show error
+    }
+    
+    return { 
+      success: false, 
+      message: `Port ${config.port} is already in use. Please change the port in settings or stop the other application.` 
+    };
   }
 
   try {
