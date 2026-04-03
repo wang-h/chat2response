@@ -4,7 +4,7 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
   glm: {
     name: 'GLM',
     baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
-    defaultModel: 'glm-4.6',
+    defaultModel: 'glm-4-plus',
     supportsTools: false, // GLM does not support function calling well
     supportsStreaming: true,
     transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {
@@ -39,8 +39,8 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
   
   kimi: {
     name: 'Kimi',
-    baseUrl: 'https://api.moonshot.cn/v1',
-    defaultModel: 'kimi-k2-0711-preview', // Updated to latest model
+    baseUrl: 'https://api.moonshot.cn/v1', // Kimi standard API endpoint
+    defaultModel: 'kimi-k2-0711-preview', // Kimi for Coding model
     supportsTools: true, // Kimi supports function calling
     supportsStreaming: true,
     transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {

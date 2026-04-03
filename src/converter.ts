@@ -434,8 +434,14 @@ export async function* streamChatToResponses(
             const choice = chunk.choices[0];
             
             // Handle content delta
-            if (choice.delta?.content) {
-              const delta = choice.delta.content;
+            let delta = choice.delta?.content;
+            
+            // Fallback to reasoning_content for reasoning models (e.g., GLM-4.6)
+            if (!delta && (choice.delta as Record<string, string> | undefined)?.reasoning_content) {
+              delta = (choice.delta as Record<string, string>).reasoning_content;
+            }
+            
+            if (delta) {
               state.fullText += delta;
               
               // 5. response.output_text.delta
