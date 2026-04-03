@@ -6,7 +6,7 @@
   "scripts": {
     "start": "electron .",
     "build": "npm run build:server && electron-builder",
-    "build:server": "tsc",
+    "build:server": "tsc && cp server/server-wrapper.js server-dist/",
     "build:mac": "npm run build:server && electron-builder --mac",
     "build:win": "npm run build:server && electron-builder --win",
     "dist": "npm run build"
