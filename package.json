@@ -1,0 +1,29 @@
+{
+  "name": "chat2response",
+  "version": "2.0.0",
+  "description": "OpenAI Responses API to Chat Completions bridge for Chinese LLM providers",
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/app.js",
+    "dev": "ts-node src/app.ts",
+    "watch": "tsc --watch"
+  },
+  "keywords": ["openai", "responses-api", "chat-completions", "proxy", "codex"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/cors": "^2.8.17",
+    "@types/node": "^20.10.0",
+    "@types/uuid": "^9.0.7",
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2"
+  }
+}
