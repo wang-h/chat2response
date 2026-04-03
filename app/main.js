@@ -202,7 +202,7 @@ async function startServer() {
     process.env.DEBUG = 'false';
 
     // Import and start server
-    const { startProxyServer } = require('./server/server-wrapper');
+    const { startProxyServer } = require('./server-dist/server-wrapper');
     serverProcess = await startProxyServer(config.port);
     
     // Update UI
