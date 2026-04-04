@@ -18,30 +18,30 @@
       <nav class="sidebar-nav">
         <button class="nav-item active" data-tab="dashboard">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
-          <span class="nav-label">控制面板</span>
+          <span class="nav-label" data-t="nav_dashboard">控制面板</span>
         </button>
         <button class="nav-item" data-tab="providers">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3L15.5 7.5z"/></svg>
-          <span class="nav-label">模型配置</span>
+          <span class="nav-label" data-t="nav_providers">模型配置</span>
         </button>
         <button class="nav-item" data-tab="codex">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/><line x1="12" x2="12" y1="2" y2="22"/></svg>
-          <span class="nav-label">Codex 设置</span>
+          <span class="nav-label" data-t="nav_codex">Codex 设置</span>
         </button>
         <button class="nav-item" data-tab="settings">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-          <span class="nav-label">全局设置</span>
+          <span class="nav-label" data-t="nav_settings">全局设置</span>
         </button>
         <button class="nav-item" data-tab="logs">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-          <span class="nav-label">运行日志</span>
+          <span class="nav-label" data-t="nav_logs">运行日志</span>
         </button>
       </nav>
 
       <div class="sidebar-footer">
         <div class="server-badge" id="sidebarStatus">
           <span class="status-dot"></span>
-          <span class="status-label">未运行</span>
+          <span class="status-label" data-t="status_stopped">未运行</span>
         </div>
       </div>
     </aside>
@@ -51,45 +51,45 @@
       <!-- Dashboard Tab -->
       <section class="tab-content active" id="tab-dashboard">
         <header class="content-header">
-          <h1>控制面板</h1>
+          <h1 data-t="nav_dashboard">控制面板</h1>
         </header>
         
         <div class="status-hero">
           <div class="hero-main">
             <div class="hero-indicator" id="heroIndicator"></div>
             <div class="hero-text">
-              <h2 id="heroStatusText">服务器已停止</h2>
-              <p id="heroPortText">端口: 3456</p>
+              <h2 id="heroStatusText" data-t="hero_stopped">服务器已停止</h2>
+              <p id="heroPortText">监听端口: 3456</p>
             </div>
-            <button id="mainToggleBtn" class="hero-btn">启动服务器</button>
+            <button id="mainToggleBtn" class="hero-btn" data-t="hero_btn_start">启动服务器</button>
           </div>
           
           <div class="hero-stats">
             <div class="stat-item">
               <span class="stat-value" id="statProvider">DeepSeek</span>
-              <span class="stat-label">当前提供商</span>
+              <span class="stat-label" data-t="stat_provider">当前提供商</span>
             </div>
             <div class="stat-item">
-              <span class="stat-value" id="statModel">deepseek-chat</span>
-              <span class="stat-label">当前模型</span>
+              <span class="stat-value" id="statModel">deepseek-reasoner</span>
+              <span class="stat-label" data-t="stat_model">当前模型</span>
             </div>
           </div>
         </div>
 
         <div class="card">
-          <h3>快速操作</h3>
+          <h3 data-t="card_quick_actions">快速操作</h3>
           <div class="action-grid">
             <button class="action-btn" onclick="openConfigDir()">
-              <span class="action-icon">📂</span>
-              <span class="action-label">配置目录</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2z"/></svg>
+              <span class="action-label" data-t="action_config_dir">配置目录</span>
             </button>
             <button class="action-btn" onclick="checkCodexConfig()">
-              <span class="action-icon">🔍</span>
-              <span class="action-label">检测配置</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <span class="action-label" data-t="action_check_config">检测配置</span>
             </button>
             <button class="action-btn" onclick="clearLogs()">
-              <span class="action-icon">🧹</span>
-              <span class="action-label">清空日志</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="action-icon"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+              <span class="action-label" data-t="action_clear_logs">清空日志</span>
             </button>
           </div>
         </div>
@@ -98,7 +98,7 @@
       <!-- Providers Tab -->
       <section class="tab-content" id="tab-providers">
         <header class="content-header">
-          <h1>模型提供商配置</h1>
+          <h1 data-t="header_providers">模型提供商配置</h1>
         </header>
         
         <div class="provider-cards">
@@ -107,7 +107,7 @@
             <div class="card-header">
               <div class="provider-info">
                 <span class="provider-title">DeepSeek</span>
-                <span class="provider-tag">推荐</span>
+                <span class="provider-tag" data-t="provider_recommended">推荐</span>
               </div>
               <div class="provider-badges">
                 <span class="badge success">Tools</span>
@@ -118,7 +118,6 @@
               <label>API Key</label>
               <div class="password-wrapper">
                 <input type="password" id="deepseekKey" placeholder="sk-..." class="modern-input">
-                <button class="eye-btn" onclick="togglePassword('deepseekKey')">👁️</button>
               </div>
             </div>
           </div>
@@ -138,14 +137,13 @@
               <label>API Key</label>
               <div class="password-wrapper">
                 <input type="password" id="kimiKey" placeholder="sk-..." class="modern-input">
-                <button class="eye-btn" onclick="togglePassword('kimiKey')">👁️</button>
               </div>
             </div>
             <div class="input-group special-option">
               <div class="setting-row mini">
                 <div class="setting-info">
-                  <span class="setting-title">Kimi Coding 专线</span>
-                  <span class="setting-desc">使用 api.kimi.com/coding 补全线路</span>
+                  <span class="setting-title" data-t="kimi_special_title">Kimi Coding 专线</span>
+                  <span class="setting-desc" data-t="kimi_special_desc">使用 api.kimi.com/coding 补全线路</span>
                 </div>
                 <label class="switch small">
                   <input type="checkbox" id="kimiCodingPlan">
@@ -170,7 +168,6 @@
               <label>API Key</label>
               <div class="password-wrapper">
                 <input type="password" id="glmKey" placeholder="API Key" class="modern-input">
-                <button class="eye-btn" onclick="togglePassword('glmKey')">👁️</button>
               </div>
             </div>
           </div>
@@ -190,7 +187,6 @@
               <label>API Key</label>
               <div class="password-wrapper">
                 <input type="password" id="minimaxKey" placeholder="API Key" class="modern-input">
-                <button class="eye-btn" onclick="togglePassword('minimaxKey')">👁️</button>
               </div>
             </div>
           </div>
@@ -200,21 +196,21 @@
       <!-- Codex Tab -->
       <section class="tab-content" id="tab-codex">
         <header class="content-header">
-          <h1>Codex 配置</h1>
+          <h1 data-t="header_codex">Codex 配置</h1>
         </header>
         
         <div class="card">
-          <div id="codexStatus" class="codex-status-banner">检测中...</div>
-          <p class="section-hint">将以下内容添加到您的 ~/.codex/config.toml 文件中</p>
+          <div id="codexStatus" class="codex-status-banner" data-t="action_check_config">检测中...</div>
+          <p class="section-hint" data-t="codex_hint">将以下内容添加到您的 ~/.codex/config.toml 文件中</p>
           
           <div class="modern-code-block">
             <pre id="codexConfig"></pre>
-            <button class="copy-fab" onclick="copyConfig()">复制</button>
+            <button class="copy-fab" onclick="copyConfig()" data-t="btn_copy">复制</button>
           </div>
           
           <div class="button-row">
-            <button class="btn-outline" onclick="checkCodexConfig()">重新检测</button>
-            <button class="btn-filled" onclick="applyCodexConfig()">自动写入配置</button>
+            <button class="btn-outline" onclick="checkCodexConfig()" data-t="codex_btn_redetect">重新检测</button>
+            <button class="btn-filled" onclick="applyCodexConfig()" data-t="codex_btn_apply">自动写入配置</button>
           </div>
           <p class="warning-text" id="codexWarning" style="display: none;"></p>
         </div>
@@ -223,15 +219,26 @@
       <!-- Settings Tab -->
       <section class="tab-content" id="tab-settings">
         <header class="content-header">
-          <h1>设置</h1>
+          <h1 data-t="header_settings">设置</h1>
         </header>
         
         <div class="card">
           <div class="settings-list">
             <div class="setting-row">
               <div class="setting-info">
-                <span class="setting-title">默认提供商</span>
-                <span class="setting-desc">未在请求头指定提供商时使用的默认模型</span>
+                <span class="setting-title" data-t="setting_lang_title">界面语言</span>
+                <span class="setting-desc" data-t="setting_lang_desc">切换中英文界面显示</span>
+              </div>
+              <select id="language" class="modern-select">
+                <option value="zh">简体中文</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title" data-t="setting_provider_title">默认提供商</span>
+                <span class="setting-desc" data-t="setting_provider_desc">未在请求头指定提供商时使用的默认模型</span>
               </div>
               <select id="defaultProvider" class="modern-select">
                 <option value="glm">GLM</option>
@@ -243,16 +250,16 @@
 
             <div class="setting-row">
               <div class="setting-info">
-                <span class="setting-title">服务器端口</span>
-                <span class="setting-desc">代理服务器运行的本地端口</span>
+                <span class="setting-title" data-t="setting_port_title">服务器端口</span>
+                <span class="setting-desc" data-t="setting_port_desc">代理服务器运行的本地端口</span>
               </div>
               <input type="number" id="port" value="3456" class="modern-number">
             </div>
 
             <div class="setting-row">
               <div class="setting-info">
-                <span class="setting-title">开机启动</span>
-                <span class="setting-desc">登录系统时自动启动代理</span>
+                <span class="setting-title" data-t="setting_autostart_title">开机启动</span>
+                <span class="setting-desc" data-t="setting_autostart_desc">登录系统时自动启动代理</span>
               </div>
               <label class="switch">
                 <input type="checkbox" id="autoStart">
@@ -262,8 +269,8 @@
 
             <div class="setting-row">
               <div class="setting-info">
-                <span class="setting-title">最小化到托盘</span>
-                <span class="setting-desc">关闭窗口时不退出程序，而是隐藏到菜单栏</span>
+                <span class="setting-title" data-t="setting_tray_title">最小化到托盘</span>
+                <span class="setting-desc" data-t="setting_tray_desc">关闭窗口时不退出程序，而是隐藏到菜单栏</span>
               </div>
               <label class="switch">
                 <input type="checkbox" id="minimizeToTray" checked>
@@ -277,8 +284,8 @@
       <!-- Logs Tab -->
       <section class="tab-content" id="tab-logs">
         <header class="content-header">
-          <h1>运行日志</h1>
-          <button class="btn-ghost" onclick="clearLogs()">清空</button>
+          <h1 data-t="header_logs">运行日志</h1>
+          <button class="btn-ghost" onclick="clearLogs()" data-t="btn_clear">清空</button>
         </header>
         <div class="log-viewer" id="logContainer"></div>
       </section>

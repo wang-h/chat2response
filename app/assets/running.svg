@@ -1,6 +1,4 @@
 <svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
-  <!-- Lucide Zap (Lightning) for Running state -->
-  <g transform="translate(6, 6) scale(1.33)" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="#000000"/>
-  </g>
+  <!-- Solid Black Bolt for Running -->
+  <path d="M23 4L10 24h9l-1 16 13-20h-9l1-16z" fill="#000000" transform="translate(3, 2)"/>
 </svg>
