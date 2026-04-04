@@ -3,6 +3,8 @@ node_modules/
 
 # Build output
 dist/
+!app/dist/*.dmg
+!app/dist/*.blockmap
 
 # Environment variables
 .env

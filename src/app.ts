@@ -290,7 +290,7 @@ app.use((err: Error, req: express.Request, res: express.Response, _next: express
 app.listen(PORT, () => {
   console.log(`
 ╔════════════════════════════════════════════════════════╗
-║           Chat2Response v2.0.0                         ║
+║           Chat2Response v0.1.0                         ║
 ║  OpenAI Responses API → Chat Completions Bridge        ║
 ╠════════════════════════════════════════════════════════╣
 ║  Server: http://localhost:${PORT}                       ║
