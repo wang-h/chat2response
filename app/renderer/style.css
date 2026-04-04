@@ -52,7 +52,7 @@ body {
 }
 
 .app-icon {
-  font-size: 24px;
+  color: var(--accent-color);
 }
 
 .app-name {
@@ -374,7 +374,22 @@ body {
   background: none;
   border: none;
   cursor: pointer;
-  opacity: 0.5;
+  opacity: 0.4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.eye-btn:hover {
+  opacity: 0.8;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.eye-btn svg {
+  color: var(--text-main);
 }
 
 /* Codex Config */
