@@ -100,247 +100,44 @@ function createWindow() {
   });
 }
 
+// Hardcoded transparent PNGs for macOS Tray (Lucide Zap style)
+const TRAY_ICONS = {
+  running: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAYAAACoPemuAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNy4yLWMwMDAgNzkuMWI0NTI3LCAyMDIyLzExLzIyLTMwOjExOjExICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIgogICAgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMS9tbS8iCiAgICB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4xL3NUeXBlL1Jlc291cmNlUmVmIyIKICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4cGE6Q3JlYXRvclRvb2w9IkFkb2JlIElsbHVzdHJhdG9yIDI3LjAgKE1hY2ludG9zaCkiCiAgICB4cGE6Q3JlYXRlRGF0ZT0iMjAyNi0wNC0wM1QxODozMDowMCswODowMCIKICAgIHhtcDpNb2RpZnlEYXRlPSIyMDI2LTA0LTAzVDE4OjMwOjAwKzA4OjAwIgogICAgeG1wOk1ldGFkYXRhRGF0ZT0iMjAyNi0wNC0wM1QxODozMDowMCswODowMCIKICAgIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6ZDJhYmUzZmYtZDIzMS00YjllLWI4YTItZTJmZGUzZjc3NjcwIgogICAgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpkMmFiZTNmZi1kMjMxLTRiOWUtYjhhMi1lMmZkZTNmNzc2NzAiCiAgICB4cXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6ZDJhYmUzZmYtZDIzMS00YjllLWI4YTItZTJmZGUzZjc3NjcwIgogICB0aWZmOk9yaWVudGF0aW9uPSIxIgogICBleGlmOlBpeGVsWURpbWVuc2lvbj0iMzYiCiAgIGV4aWY6UGl4ZWxYRGltZW5zaW9uPSIzNiI+CiAgIDx4bXBNTTpEZXJpdmVkRnJvbQogICAgc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpkMmFiZTNmZi1kMjMxLTRiOWUtYjhhMi1lMmZkZTNmNzc2NzAiCiAgICBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOmQyYWJlM2ZmLWQyMzEtNGI5ZS1iOGEyLWUyZmRlM2Y3NzY3MCIvPgogIDwvcmRmOkRlc2NyaXB0aW9uPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KPD94cGFja2V0IGVuZD0idyI/PvIsgu0AAAAJcEhZcwAACxMAAAsTAQCanBgAAABQSURBVFiF7dcxCgAhDETR9P7nLpYpUscmsLALv8InmSQUAFYatXv3Zp6Z78Z7Zq6Z78Z7Zs6Z78YnM++Z78YnM++Z78YnM++Z78YnM++Z78YnM++Z78YnM/+/A8vIGBAAAAAElFTkSuQmCC',
+  stopped: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAmCAYAAACoPemuAAAACXBIWXMAAAsTAAALEwEAmpwYAAABTGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4KPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNy4yLWMwMDAgNzkuMWI0NTI3LCAyMDIyLzExLzIyLTMwOjExOjExICAgICAgICAiPgogPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4KICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIgogICAgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMS9tbS8iCiAgICB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4xL3NUeXBlL1Jlc291cmNlUmVmIyIKICAgIHhtbG5zOnRpZmY9Imh0dHA6Ly9ucy5hZG9iZS5jb20vdGlmZi8xLjAvIgogICAgeG1sbnM6ZXhpZj0iaHR0cDovL25zLmFkb2JlLmNvbS9leGlmLzEuMC8iCiAgICB4cGE6Q3JlYXRvclRvb2w9IkFkb2JlIElsbHVzdHJhdG9yIDI3LjAgKE1hY2ludG9zaCkiCiAgICB4cGE6Q3JlYXRlRGF0ZT0iMjAyNi0wNC0wM1QxODozMDowMCswODowMCIKICAgIHhtcDpNb2RpZnlEYXRlPSIyMDI2LTA0LTAzVDE4OjMwOjAwKzA4OjAwIgogICAgeG1wOk1ldGFkYXRhRGF0ZT0iMjAyNi0wNC0wM1QxODozMDowMCswODowMCIKICAgIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6ZDJhYmUzZmYtZDIzMS00YjllLWI4YTItZTJmZGUzZjc3NjcwIgogICAgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpkMmFiZTNmZi1kMjMxLTRiOWUtYjhhMi1lMmZkZTNmNzc2NzAiCiAgICB4cXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6ZDJhYmUzZmYtZDIzMS00YjllLWI4YTItZTJmZGUzZjc3NjcwIgogICB0aWZmOk9yaWVudGF0aW9uPSIxIgogICBleGlmOlBpeGVsWURpbWVuc2lvbj0iMzYiCiAgIGV4aWY6UGl4ZWxYRGltZW5zaW9uPSIzNiI+CiAgIDx4bXBNTTpEZXJpdmVkRnJvbQogICAgc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpkMmFiZTNmZi1kMjMxLTRiOWUtYjhhMi1lMmZkZTNmNzc2NzAiCiAgICBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOmQyYWJlM2ZmLWQyMzEtNGI5ZS1iOGEyLWUyZmRlM2Y3NzY3MCIvPgogIDwvcmRmOkRlc2NyaXB0aW9uPgogPC9yZGY6UkRGPgo8L3g6eG1wbWV0YT4KPD94cGFja2V0IGVuZD0idyI/PvIsgu0AAAAJcEhZcwAACxMAAAsTAQCanBgAAABQSURBVFiF7dcxCgAhDETR9P7nLpYpUscmsLALv8InmSQUAFYatXv3Zp6Z78Z7Zq6Z78Z7Zs6Z78YnM++Z78YnM++Z78YnM++Z78YnM++Z78YnM++Z78YnM/+/A8vIGBAAAAAElFTkSuQmCC'
+};
+
 // Create tray icon
 function createTray() {
-  // Use template icon for macOS (follows system light/dark mode)
-  const iconPath = path.join(__dirname, 'assets', 'tray-iconTemplate.png');
-  
-  if (fs.existsSync(iconPath)) {
-    const image = nativeImage.createFromPath(iconPath);
-    
-    // macOS: use template image for proper system integration
-    if (process.platform === 'darwin') {
-      image.setTemplateImage(true);
-    }
-    
-    tray = new Tray(image);
-  } else {
-    // Fallback
-    tray = new Tray(nativeImage.createEmpty());
-  }
-  
-  // Set highlight mode for macOS (icon highlights when clicked)
+  const image = nativeImage.createFromDataURL(TRAY_ICONS.stopped);
   if (process.platform === 'darwin') {
-    tray.setHighlightMode('always');
+    image.setTemplateImage(true);
   }
-
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: 'Show App',
-      click: () => {
-        if (mainWindow) {
-          mainWindow.show();
-        } else {
-          createWindow();
-        }
-      }
-    },
-    {
-      label: 'Server Status',
-      submenu: [
-        {
-          label: isServerRunning() ? 'Running' : 'Stopped',
-          enabled: false
-        },
-        { type: 'separator' },
-        {
-          label: 'Start Server',
-          click: () => startServer(),
-          visible: !isServerRunning()
-        },
-        {
-          label: 'Stop Server',
-          click: () => stopServer(),
-          visible: isServerRunning()
-        }
-      ]
-    },
-    { type: 'separator' },
-    {
-      label: 'Quit',
-      click: () => {
-        isQuitting = true;
-        stopServer();
-        app.quit();
-      }
-    }
-  ]);
-
+  tray = new Tray(image);
   tray.setToolTip('Chat2Response');
-  tray.setContextMenu(contextMenu);
-
-  tray.on('click', () => {
-    if (mainWindow) {
-      if (mainWindow.isVisible()) {
-        mainWindow.hide();
-      } else {
-        mainWindow.show();
-      }
-    } else {
-      createWindow();
-    }
-  });
-}
-
-// Check if server is running
-function isServerRunning() {
-  return serverProcess !== null;
-}
-
-// Check if port is in use
-async function isPortInUse(port) {
-  const net = require('net');
-  return new Promise((resolve) => {
-    const server = net.createServer();
-    server.once('error', (err) => {
-      if (err.code === 'EADDRINUSE') {
-        resolve(true);
-      } else {
-        resolve(false);
-      }
-    });
-    server.once('listening', () => {
-      server.close();
-      resolve(false);
-    });
-    server.listen(port);
-  });
-}
-
-// Start server
-async function startServer() {
-  if (serverProcess) {
-    return { success: true, message: 'Server already running' };
-  }
-
-  const config = loadConfig();
-  
-  // Validate at least one API key
-  const hasApiKey = Object.values(config.apiKeys).some(key => key && key.trim().length > 0);
-  if (!hasApiKey) {
-    return { success: false, message: 'Please configure at least one API key' };
-  }
-
-  // Check if port is in use
-  const portInUse = await isPortInUse(config.port);
-  if (portInUse) {
-    // Try to connect to the existing server to see if it's Chat2Response
-    try {
-      const response = await fetch(`http://localhost:${config.port}/health`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.service === 'chat2response') {
-          // It's already a Chat2Response server - connect to it
-          serverProcess = {
-            stop: async () => {
-              // Just clear the reference, actual server might be another instance
-              serverProcess = null;
-              updateTrayMenu();
-              updateApplicationMenu();
-            }
-          };
-          
-          // Update UI
-          if (mainWindow) {
-            mainWindow.webContents.send('server-status', { running: true, port: config.port });
-          }
-          
-          updateTrayMenu();
-          updateApplicationMenu();
-          
-          return { success: true, message: `Connected to existing Chat2Response on port ${config.port}` };
-        }
-      }
-    } catch (e) {
-      // Not our server, show error
-    }
-    
-    return { 
-      success: false, 
-      message: `Port ${config.port} is already in use. Please change the port in settings or stop the other application.` 
-    };
-  }
-
-  try {
-    // Set environment variables
-    process.env.GLM_API_KEY = config.apiKeys.glm || '';
-    process.env.KIMI_API_KEY = config.apiKeys.kimi || '';
-    process.env.DEEPSEEK_API_KEY = config.apiKeys.deepseek || '';
-    process.env.MINIMAX_API_KEY = config.apiKeys.minimax || '';
-    process.env.KIMI_CODING_PLAN = config.kimiCodingPlan ? 'true' : 'false';
-    process.env.DEFAULT_PROVIDER = config.defaultProvider;
-    process.env.PORT = config.port.toString();
-    process.env.DEBUG = 'false';
-
-    // Import and start server
-    const { startProxyServer } = require('./server-dist/server-wrapper');
-    serverProcess = await startProxyServer(config.port);
-    
-    // Update UI
-    if (mainWindow) {
-      mainWindow.webContents.send('server-status', { running: true, port: config.port });
-    }
-    
-    updateTrayMenu();
-    updateApplicationMenu();
-    
-    return { success: true, message: `Server started on port ${config.port}` };
-  } catch (error) {
-    console.error('Failed to start server:', error);
-    serverProcess = null;
-    return { success: false, message: error.message };
-  }
-}
-
-// Stop server
-async function stopServer() {
-  if (!serverProcess) {
-    return { success: true, message: 'Server not running' };
-  }
-
-  try {
-    await serverProcess.stop();
-    serverProcess = null;
-    
-    if (mainWindow) {
-      mainWindow.webContents.send('server-status', { running: false });
-    }
-    
-    updateTrayMenu();
-    updateApplicationMenu();
-    
-    return { success: true, message: 'Server stopped' };
-  } catch (error) {
-    console.error('Failed to stop server:', error);
-    return { success: false, message: error.message };
-  }
+  updateTrayMenu();
 }
 
 // Update tray icon based on server status
 function updateTrayIcon() {
   if (!tray || process.platform !== 'darwin') return;
-
-  // Use different icon based on server status
-  const iconName = isServerRunning() ? 'tray-icon-runningTemplate.png' : 'tray-icon-stoppedTemplate.png';
-  const iconPath = path.join(__dirname, 'assets', iconName);
-
-  if (fs.existsSync(iconPath)) {
-    const image = nativeImage.createFromPath(iconPath);
-    // Use template image for macOS for dynamic dark/light mode
-    image.setTemplateImage(true);
-    tray.setImage(image);
-  }
+  const dataUrl = isServerRunning() ? TRAY_ICONS.running : TRAY_ICONS.stopped;
+  const image = nativeImage.createFromDataURL(dataUrl);
+  image.setTemplateImage(true);
+  tray.setImage(image);
 }
+
 // Update tray menu
 function updateTrayMenu() {
   if (!tray) return;
   
-  // Update icon for status indication
   updateTrayIcon();
+  
+  const config = loadConfig();
+  const lang = config.language || 'zh';
   
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Show App',
+      label: lang === 'zh' ? '显示应用' : 'Show App',
       click: () => {
         if (mainWindow) {
           mainWindow.show();
@@ -350,17 +147,21 @@ function updateTrayMenu() {
       }
     },
     {
-      label: isServerRunning() ? '✅ Running' : '⭕ Stopped',
+      label: isServerRunning() 
+        ? (lang === 'zh' ? '✅ 运行中' : '✅ Running') 
+        : (lang === 'zh' ? '⭕ 已停止' : '⭕ Stopped'),
       enabled: false
     },
     { type: 'separator' },
     {
-      label: isServerRunning() ? 'Stop Server' : 'Start Server',
+      label: isServerRunning() 
+        ? (lang === 'zh' ? '停止服务器' : 'Stop Server') 
+        : (lang === 'zh' ? '启动服务器' : 'Start Server'),
       click: () => isServerRunning() ? stopServer() : startServer()
     },
     { type: 'separator' },
     {
-      label: 'Quit',
+      label: lang === 'zh' ? '退出' : 'Quit',
       click: () => {
         isQuitting = true;
         stopServer();
