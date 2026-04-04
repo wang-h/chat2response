@@ -1,6 +1,6 @@
 {
   "name": "chat2response-app",
-  "version": "2.0.0",
+  "version": "0.1.0",
   "description": "Chat2Response Desktop App - Easy proxy for Codex + Chinese LLMs",
   "main": "main.js",
   "scripts": {
