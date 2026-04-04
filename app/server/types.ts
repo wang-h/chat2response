@@ -260,6 +260,7 @@ export interface ProviderConfig {
   name: string;
   baseUrl: string;
   defaultModel: string;
+  models: string[];
   supportsTools: boolean;
   supportsStreaming: boolean;
   transformRequest?: (req: ChatCompletionRequest) => ChatCompletionRequest;

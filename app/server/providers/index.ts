@@ -5,6 +5,7 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
     name: 'GLM',
     baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
     defaultModel: 'glm-5',
+    models: ['glm-5'],
     supportsTools: false, // GLM does not support function calling well
     supportsStreaming: true,
     transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {
@@ -30,6 +31,8 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
           content: typeof msg.content === 'string' 
             ? msg.content 
             : JSON.stringify(msg.content),
+          // Preserve tool_call_id for multi-turn tool results
+          ...(msg.tool_call_id ? { tool_call_id: msg.tool_call_id } : {}),
         }));
       }
       
@@ -39,20 +42,26 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
   
   kimi: {
     name: 'Kimi',
-    baseUrl: 'https://api.moonshot.cn/v1', // Kimi standard API endpoint
-    defaultModel: 'kimi-coding', // Kimi for Coding model
-    supportsTools: true, // Kimi supports function calling
+    baseUrl: 'https://api.moonshot.cn/v1',
+    defaultModel: 'kimi-coding',
+    models: ['kimi-coding', 'moonshot-v1-8k', 'moonshot-v1-32k', 'moonshot-v1-128k'],
+    supportsTools: true,
     supportsStreaming: true,
     transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {
-      // Kimi has specific requirements for tool schemas
       const transformed: ChatCompletionRequest = { ...req };
       
+      // Handle Kimi Coding Plan endpoint switch
+      if (process.env.KIMI_CODING_PLAN === 'true') {
+        (PROVIDERS.kimi as any).baseUrl = 'https://api.kimi.com/coding/v1';
+      } else {
+        (PROVIDERS.kimi as any).baseUrl = 'https://api.moonshot.cn/v1';
+      }
+
       if (transformed.tools) {
         transformed.tools = transformed.tools.map(tool => ({
           ...tool,
           function: {
             ...tool.function,
-            // Ensure parameters has required fields
             parameters: {
               type: 'object',
               properties: {},
@@ -63,8 +72,7 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
         }));
       }
       
-      // Convert model name to Kimi format if needed
-      if (!transformed.model?.includes('kimi')) {
+      if (!transformed.model?.includes('kimi') && !transformed.model?.includes('moonshot')) {
         transformed.model = 'kimi-coding';
       }
       
@@ -76,6 +84,7 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
     name: 'DeepSeek',
     baseUrl: 'https://api.deepseek.com/v1',
     defaultModel: 'deepseek-chat',
+    models: ['deepseek-chat', 'deepseek-reasoner'],
     supportsTools: true,
     supportsStreaming: true,
     // DeepSeek follows OpenAI format closely, minimal transformation needed
@@ -99,6 +108,7 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
     name: 'MiniMax',
     baseUrl: 'https://api.minimax.chat/v1', // 国内版 API
     defaultModel: 'minimax-2.7',
+    models: ['minimax-2.7'],
     supportsTools: true,
     supportsStreaming: true,
     transformRequest: (req: ChatCompletionRequest): ChatCompletionRequest => {
@@ -118,8 +128,10 @@ export const PROVIDERS: Record<ProviderName, ProviderConfig> = {
             : JSON.stringify(msg.content);
           
           return {
-            ...msg,
+            role: msg.role,
             content,
+            // Preserve tool_call_id for multi-turn tool results
+            ...(msg.tool_call_id ? { tool_call_id: msg.tool_call_id } : {}),
           };
         });
       }
@@ -150,7 +162,7 @@ export function getApiKey(providerName: ProviderName): string {
     throw new Error(`Missing API key for ${providerName}. Set ${envVar} environment variable.`);
   }
   
-  return apiKey;
+  return apiKey.trim();
 }
 
 export function transformRequest(
@@ -170,14 +182,11 @@ export function isProviderSupported(name: string): name is ProviderName {
   return name in PROVIDERS;
 }
 
-// Helper to convert model names between providers
-export function mapModelName(model: string, targetProvider: ProviderName): string {
-  // If the model already belongs to the target provider, return as-is
-  if (targetProvider === 'glm' && model.startsWith('glm-')) return model;
-  if (targetProvider === 'kimi' && model.startsWith('kimi-')) return model;
-  if (targetProvider === 'deepseek' && model.startsWith('deepseek-')) return model;
-  if (targetProvider === 'minimax' && model.startsWith('abab')) return model;
-  
-  // Otherwise return the default model for the provider
-  return PROVIDERS[targetProvider].defaultModel;
+export function detectProviderFromModel(modelId: string): ProviderName | null {
+  const modelLower = modelId.toLowerCase();
+  if (modelLower.includes('glm')) return 'glm';
+  if (modelLower.includes('kimi')) return 'kimi';
+  if (modelLower.includes('deepseek')) return 'deepseek';
+  if (modelLower.includes('minimax')) return 'minimax';
+  return null;
 }

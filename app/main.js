@@ -67,6 +67,9 @@ function createWindow() {
     height: 700,
     minWidth: 800,
     minHeight: 600,
+    titleBarStyle: 'hiddenInset',
+    vibrancy: 'under-window',
+    visualEffectState: 'active',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -100,7 +103,7 @@ function createWindow() {
 // Create tray icon
 function createTray() {
   // Use template icon for macOS (follows system light/dark mode)
-  const iconPath = path.join(__dirname, 'assets', 'tray-icon.png');
+  const iconPath = path.join(__dirname, 'assets', 'tray-iconTemplate.png');
   
   if (fs.existsSync(iconPath)) {
     const image = nativeImage.createFromPath(iconPath);
@@ -264,6 +267,7 @@ async function startServer() {
     process.env.KIMI_API_KEY = config.apiKeys.kimi || '';
     process.env.DEEPSEEK_API_KEY = config.apiKeys.deepseek || '';
     process.env.MINIMAX_API_KEY = config.apiKeys.minimax || '';
+    process.env.KIMI_CODING_PLAN = config.kimiCodingPlan ? 'true' : 'false';
     process.env.DEFAULT_PROVIDER = config.defaultProvider;
     process.env.PORT = config.port.toString();
     process.env.DEBUG = 'false';
@@ -315,19 +319,18 @@ async function stopServer() {
 // Update tray icon based on server status
 function updateTrayIcon() {
   if (!tray || process.platform !== 'darwin') return;
-  
+
   // Use different icon based on server status
-  const iconName = isServerRunning() ? 'tray-icon-running.png' : 'tray-icon-stopped.png';
+  const iconName = isServerRunning() ? 'tray-icon-runningTemplate.png' : 'tray-icon-stoppedTemplate.png';
   const iconPath = path.join(__dirname, 'assets', iconName);
-  
+
   if (fs.existsSync(iconPath)) {
     const image = nativeImage.createFromPath(iconPath);
-    // Don't use template image for colored status icons
-    image.setTemplateImage(false);
+    // Use template image for macOS for dynamic dark/light mode
+    image.setTemplateImage(true);
     tray.setImage(image);
   }
 }
-
 // Update tray menu
 function updateTrayMenu() {
   if (!tray) return;

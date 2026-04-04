@@ -13,7 +13,8 @@ const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3456;
 const DEBUG = process.env.DEBUG === 'true';
 app.use((0, cors_1.default)());
-app.use(express_1.default.json());
+app.use(express_1.default.json({ limit: '50mb' }));
+app.use(express_1.default.urlencoded({ limit: '50mb', extended: true }));
 function debug(...args) {
     if (DEBUG) {
         console.log('[App]', ...args);
@@ -38,12 +39,15 @@ app.get('/v1/models', async (req, res) => {
         // Aggregate models from all providers
         const allModels = [];
         for (const [key, provider] of Object.entries(providers_1.PROVIDERS)) {
-            allModels.push({
-                id: provider.defaultModel,
-                object: 'model',
-                created: Date.now(),
-                owned_by: provider.name,
-            });
+            const models = provider.models ?? [provider.defaultModel];
+            for (const modelId of models) {
+                allModels.push({
+                    id: modelId,
+                    object: 'model',
+                    created: Date.now(),
+                    owned_by: provider.name,
+                });
+            }
         }
         res.json({
             object: 'list',
@@ -70,7 +74,9 @@ app.post('/v1/responses', async (req, res) => {
         debug('Received request:', JSON.stringify(body, null, 2));
         // Get provider from request header or use default
         const providerHeader = req.headers['x-provider'];
+        const providerFromModel = (0, providers_1.detectProviderFromModel)(body.model);
         const providerName = ((0, providers_1.isProviderSupported)(providerHeader) ? providerHeader : null) ||
+            providerFromModel ||
             process.env.DEFAULT_PROVIDER ||
             'deepseek';
         const provider = (0, providers_1.getProvider)(providerName);
@@ -90,6 +96,7 @@ app.post('/v1/responses', async (req, res) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${apiKey}`,
+                'User-Agent': 'claude-code/0.1.0', // 与 OpenClaw 保持一致
             },
             body: JSON.stringify(chatRequest),
         });
@@ -187,6 +194,7 @@ app.post('/v1/chat/completions', async (req, res) => {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${apiKey}`,
+                'User-Agent': 'claude-code/0.1.0',
             },
             body: JSON.stringify(transformedRequest),
         });

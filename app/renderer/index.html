@@ -6,173 +6,283 @@
   <title>Chat2Response</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="container">
-    <!-- Header -->
-    <header class="header">
-      <h1>🚀 Chat2Response</h1>
-      <p class="subtitle">让 Codex 使用国内大模型的代理工具</p>
-    </header>
-
-    <!-- Server Status -->
-    <section class="status-section">
-      <div class="status-card" id="statusCard">
-        <div class="status-indicator" id="statusIndicator"></div>
-        <div class="status-text">
-          <span id="statusText">服务器未运行</span>
-          <span class="port-info" id="portInfo"></span>
-        </div>
-        <button id="toggleServerBtn" class="btn btn-primary">启动服务器</button>
+<body class="macos">
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="app-icon">🚀</div>
+        <div class="app-name">Chat2Response</div>
       </div>
-    </section>
+      
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="dashboard">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">控制面板</span>
+        </button>
+        <button class="nav-item" data-tab="providers">
+          <span class="nav-icon">🔑</span>
+          <span class="nav-label">模型配置</span>
+        </button>
+        <button class="nav-item" data-tab="codex">
+          <span class="nav-icon">📝</span>
+          <span class="nav-label">Codex 设置</span>
+        </button>
+        <button class="nav-item" data-tab="settings">
+          <span class="nav-icon">⚙️</span>
+          <span class="nav-label">全局设置</span>
+        </button>
+        <button class="nav-item" data-tab="logs">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">运行日志</span>
+        </button>
+      </nav>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <!-- API Keys -->
-      <section class="section">
-        <h2>🔑 API Keys 配置</h2>
-        <p class="hint">请至少配置一个 API Key</p>
+      <div class="sidebar-footer">
+        <div class="server-badge" id="sidebarStatus">
+          <span class="status-dot"></span>
+          <span class="status-label">未运行</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="content-area">
+      <!-- Dashboard Tab -->
+      <section class="tab-content active" id="tab-dashboard">
+        <header class="content-header">
+          <h1>控制面板</h1>
+        </header>
         
-        <div class="provider-list">
-          <div class="provider-item">
-            <div class="provider-header">
-              <span class="provider-name">GLM</span>
-              <span class="provider-model">默认: glm-5</span>
+        <div class="status-hero">
+          <div class="hero-main">
+            <div class="hero-indicator" id="heroIndicator"></div>
+            <div class="hero-text">
+              <h2 id="heroStatusText">服务器已停止</h2>
+              <p id="heroPortText">端口: 3456</p>
             </div>
-            <div class="password-input-wrapper">
-              <input type="password" id="glmKey" placeholder="输入 GLM API Key" class="api-input">
-              <button type="button" class="toggle-password" onclick="togglePassword('glmKey')">👁️</button>
+            <button id="mainToggleBtn" class="hero-btn">启动服务器</button>
+          </div>
+          
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-value" id="statProvider">DeepSeek</span>
+              <span class="stat-label">当前提供商</span>
             </div>
-            <div class="provider-features">
-              <span class="feature disabled">❌ Tools</span>
-              <span class="feature enabled">✅ Streaming</span>
+            <div class="stat-item">
+              <span class="stat-value" id="statModel">deepseek-chat</span>
+              <span class="stat-label">当前模型</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>快速操作</h3>
+          <div class="action-grid">
+            <button class="action-btn" onclick="openConfigDir()">
+              <span class="action-icon">📂</span>
+              <span class="action-label">配置目录</span>
+            </button>
+            <button class="action-btn" onclick="checkCodexConfig()">
+              <span class="action-icon">🔍</span>
+              <span class="action-label">检测配置</span>
+            </button>
+            <button class="action-btn" onclick="clearLogs()">
+              <span class="action-icon">🧹</span>
+              <span class="action-label">清空日志</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Providers Tab -->
+      <section class="tab-content" id="tab-providers">
+        <header class="content-header">
+          <h1>模型提供商配置</h1>
+        </header>
+        
+        <div class="provider-cards">
+          <!-- DeepSeek -->
+          <div class="card provider-card highlighted">
+            <div class="card-header">
+              <div class="provider-info">
+                <span class="provider-title">DeepSeek</span>
+                <span class="provider-tag">推荐</span>
+              </div>
+              <div class="provider-badges">
+                <span class="badge success">Tools</span>
+                <span class="badge success">Stream</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label>API Key</label>
+              <div class="password-wrapper">
+                <input type="password" id="deepseekKey" placeholder="sk-..." class="modern-input">
+                <button class="eye-btn" onclick="togglePassword('deepseekKey')">👁️</button>
+              </div>
             </div>
           </div>
 
-          <div class="provider-item">
-            <div class="provider-header">
-              <span class="provider-name">Kimi</span>
-              <span class="provider-model">默认: kimi-coding</span>
+          <!-- Kimi -->
+          <div class="card provider-card" id="kimiCard">
+            <div class="card-header">
+              <div class="provider-info">
+                <span class="provider-title">Kimi (Moonshot)</span>
+              </div>
+              <div class="provider-badges">
+                <span class="badge success">Tools</span>
+                <span class="badge success">Stream</span>
+              </div>
             </div>
-            <div class="password-input-wrapper">
-              <input type="password" id="kimiKey" placeholder="输入 Kimi API Key" class="api-input">
-              <button type="button" class="toggle-password" onclick="togglePassword('kimiKey')">👁️</button>
+            <div class="input-group">
+              <label>API Key</label>
+              <div class="password-wrapper">
+                <input type="password" id="kimiKey" placeholder="sk-..." class="modern-input">
+                <button class="eye-btn" onclick="togglePassword('kimiKey')">👁️</button>
+              </div>
             </div>
-            <div class="provider-features">
-              <span class="feature enabled">✅ Tools</span>
-              <span class="feature enabled">✅ Streaming</span>
+            <div class="input-group special-option">
+              <div class="setting-row mini">
+                <div class="setting-info">
+                  <span class="setting-title">Kimi Coding 专线</span>
+                  <span class="setting-desc">使用 api.kimi.com/coding 补全线路</span>
+                </div>
+                <label class="switch small">
+                  <input type="checkbox" id="kimiCodingPlan">
+                  <span class="slider"></span>
+                </label>
+              </div>
             </div>
           </div>
 
-          <div class="provider-item">
-            <div class="provider-header">
-              <span class="provider-name">DeepSeek</span>
-              <span class="provider-model">默认: deepseek-chat</span>
+          <!-- GLM -->
+          <div class="card provider-card">
+            <div class="card-header">
+              <div class="provider-info">
+                <span class="provider-title">智谱 GLM</span>
+              </div>
+              <div class="provider-badges">
+                <span class="badge danger">No Tools</span>
+                <span class="badge success">Stream</span>
+              </div>
             </div>
-            <div class="password-input-wrapper">
-              <input type="password" id="deepseekKey" placeholder="输入 DeepSeek API Key" class="api-input">
-              <button type="button" class="toggle-password" onclick="togglePassword('deepseekKey')">👁️</button>
+            <div class="input-group">
+              <label>API Key</label>
+              <div class="password-wrapper">
+                <input type="password" id="glmKey" placeholder="API Key" class="modern-input">
+                <button class="eye-btn" onclick="togglePassword('glmKey')">👁️</button>
+              </div>
             </div>
-            <div class="provider-features">
-              <span class="feature enabled">✅ Tools</span>
-              <span class="feature enabled">✅ Streaming</span>
-            </div>
-            <span class="recommend-badge">推荐</span>
           </div>
 
-          <div class="provider-item">
-            <div class="provider-header">
-              <span class="provider-name">MiniMax</span>
-              <span class="provider-model">默认: minimax-2.7</span>
+          <!-- MiniMax -->
+          <div class="card provider-card">
+            <div class="card-header">
+              <div class="provider-info">
+                <span class="provider-title">MiniMax</span>
+              </div>
+              <div class="provider-badges">
+                <span class="badge success">Tools</span>
+                <span class="badge success">Stream</span>
+              </div>
             </div>
-            <div class="password-input-wrapper">
-              <input type="password" id="minimaxKey" placeholder="输入 MiniMax API Key" class="api-input">
-              <button type="button" class="toggle-password" onclick="togglePassword('minimaxKey')">👁️</button>
-            </div>
-            <div class="provider-features">
-              <span class="feature enabled">✅ Tools</span>
-              <span class="feature enabled">✅ Streaming</span>
+            <div class="input-group">
+              <label>API Key</label>
+              <div class="password-wrapper">
+                <input type="password" id="minimaxKey" placeholder="API Key" class="modern-input">
+                <button class="eye-btn" onclick="togglePassword('minimaxKey')">👁️</button>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Settings -->
-      <section class="section">
-        <h2>⚙️ 设置</h2>
+      <!-- Codex Tab -->
+      <section class="tab-content" id="tab-codex">
+        <header class="content-header">
+          <h1>Codex 配置</h1>
+        </header>
         
-        <div class="setting-item">
-          <label for="defaultProvider">默认提供商</label>
-          <select id="defaultProvider" class="select-input">
-            <option value="glm">GLM</option>
-            <option value="kimi">Kimi</option>
-            <option value="deepseek" selected>DeepSeek</option>
-            <option value="minimax">MiniMax</option>
-          </select>
-        </div>
-
-        <div class="setting-item">
-          <label for="port">服务器端口</label>
-          <input type="number" id="port" value="3456" min="1024" max="65535" class="number-input">
-        </div>
-
-        <div class="setting-item checkbox">
-          <label>
-            <input type="checkbox" id="autoStart">
-            <span>开机自动启动服务器</span>
-          </label>
-        </div>
-
-        <div class="setting-item checkbox">
-          <label>
-            <input type="checkbox" id="minimizeToTray" checked>
-            <span>关闭窗口时最小化到系统托盘</span>
-          </label>
+        <div class="card">
+          <div id="codexStatus" class="codex-status-banner">检测中...</div>
+          <p class="section-hint">将以下内容添加到您的 ~/.codex/config.toml 文件中</p>
+          
+          <div class="modern-code-block">
+            <pre id="codexConfig"></pre>
+            <button class="copy-fab" onclick="copyConfig()">复制</button>
+          </div>
+          
+          <div class="button-row">
+            <button class="btn-outline" onclick="checkCodexConfig()">重新检测</button>
+            <button class="btn-filled" onclick="applyCodexConfig()">自动写入配置</button>
+          </div>
+          <p class="warning-text" id="codexWarning" style="display: none;"></p>
         </div>
       </section>
 
-      <!-- Codex Config -->
-      <section class="section" id="codexSection" style="display: none;">
-        <h2>📝 Codex 配置</h2>
-        <div id="codexStatus" class="codex-status"></div>
-        <p class="hint">根据您的 API Key 配置自动生成</p>
+      <!-- Settings Tab -->
+      <section class="tab-content" id="tab-settings">
+        <header class="content-header">
+          <h1>设置</h1>
+        </header>
         
-        <div class="code-block">
-          <pre id="codexConfig"></pre>
-          <button class="btn btn-small" onclick="copyConfig()">复制配置</button>
+        <div class="card">
+          <div class="settings-list">
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">默认提供商</span>
+                <span class="setting-desc">未在请求头指定提供商时使用的默认模型</span>
+              </div>
+              <select id="defaultProvider" class="modern-select">
+                <option value="glm">GLM</option>
+                <option value="kimi">Kimi</option>
+                <option value="deepseek" selected>DeepSeek</option>
+                <option value="minimax">MiniMax</option>
+              </select>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">服务器端口</span>
+                <span class="setting-desc">代理服务器运行的本地端口</span>
+              </div>
+              <input type="number" id="port" value="3456" class="modern-number">
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">开机启动</span>
+                <span class="setting-desc">登录系统时自动启动代理</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="autoStart">
+                <span class="slider"></span>
+              </label>
+            </div>
+
+            <div class="setting-row">
+              <div class="setting-info">
+                <span class="setting-title">最小化到托盘</span>
+                <span class="setting-desc">关闭窗口时不退出程序，而是隐藏到菜单栏</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="minimizeToTray" checked>
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
         </div>
-        
-        <div class="codex-actions">
-          <button class="btn btn-secondary" onclick="checkCodexConfig()">
-            🔍 检测 Codex 配置
-          </button>
-          <button class="btn btn-primary" onclick="applyCodexConfig()">
-            ⚡ 一键写入配置
-          </button>
-        </div>
-        <p class="hint warning" id="codexWarning" style="display: none;"></p>
       </section>
 
-      <!-- Logs -->
-      <section class="section">
-        <h2>📋 日志</h2>
-        <div class="log-container" id="logContainer">
-          <div class="log-entry info">应用已启动</div>
-        </div>
-        <button class="btn btn-small" onclick="clearLogs()">清空日志</button>
+      <!-- Logs Tab -->
+      <section class="tab-content" id="tab-logs">
+        <header class="content-header">
+          <h1>运行日志</h1>
+          <button class="btn-ghost" onclick="clearLogs()">清空</button>
+        </header>
+        <div class="log-viewer" id="logContainer"></div>
       </section>
     </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-links">
-        <a href="#" onclick="openConfigDir()">打开配置目录</a>
-        <a href="https://github.com/wang-h/chat2response" target="_blank">GitHub</a>
-      </div>
-      <div class="footer-info">
-        Created with ❤️ and Kimi Code
-      </div>
-    </footer>
   </div>
 
   <script src="app.js"></script>
